@@ -10,7 +10,7 @@
   }
   function fire() { listeners.forEach(function (f) { try { f(session); } catch (e) { console.error(e); } }); }
   function call(action, payload) {
-    if (!sb) return Promise.reject(new Error("Backend set nahi hua (assets/config.js)."));
+    if (!sb) return Promise.reject(new Error("Backend is not set up (assets/config.js)."));
     var body = Object.assign({ action: action }, payload || {});
     var headers = { "Content-Type": "application/json", apikey: C.SUPABASE_ANON_KEY, Authorization: "Bearer " + (session ? session.access_token : C.SUPABASE_ANON_KEY) };
     return fetch(C.SUPABASE_URL + "/functions/v1/api", { method: "POST", headers: headers, body: JSON.stringify(body) })
