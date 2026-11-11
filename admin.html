@@ -41,7 +41,7 @@
   <body>
     <div class="login card" id="login">
       <h1>Admin sign in</h1>
-      <p class="meta" id="lg-note">Website wale account se sign in karein. Account admin hona chahiye.</p>
+      <p class="meta" id="lg-note">Sign in with the website account. The account must be an admin.</p>
       <label><span>Email</span><input class="in" id="lg-email" type="email" autocomplete="email" /></label>
       <label><span>Password</span><input class="in" id="lg-pw" type="password" autocomplete="current-password" /></label>
       <button class="btn" id="lg-go">Sign in</button>
@@ -71,7 +71,7 @@
         <section data-p="pays" hidden>
           <div class="row" style="justify-content:space-between"><h1>Payments</h1><select class="in" id="p-filter" style="width:180px"><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option><option value="">All</option></select></div>
           <div class="card"><table><thead><tr><th>Date</th><th>User</th><th>Plan</th><th>Amount</th><th>Method</th><th>TID</th><th>Proof</th><th>Status</th><th></th></tr></thead><tbody id="p-rows"></tbody></table></div>
-          <p class="help">Approve karne se user ka plan foran active ho jata hai (plan ke din ke hisaab se). Shared plan wale users khud-ba-khud 5-5 ke group mein jaate hain.</p>
+          <p class="help">Approving activates the user's plan immediately (for the plan's number of days). Users on a shared plan are automatically placed in groups of 5.</p>
         </section>
 
         <section data-p="users" hidden>
@@ -82,7 +82,7 @@
         <section data-p="plans" hidden>
           <h1>Plans &amp; limits</h1>
           <div id="pl-list" style="display:grid;gap:14px"></div>
-          <p class="help">Radar visible khaali = saare channels. Free plan par 2 likhein: 2 channels dikhte hain, baqi blur. Credits har din 00:00 UTC par reset hote hain.</p>
+          <p class="help">Radar visible empty = all channels. For the free plan enter 2: 2 channels are shown, the rest are blurred. Credits reset every day at 00:00 UTC.</p>
         </section>
 
         <section data-p="methods" hidden>
@@ -92,7 +92,7 @@
             <h2 id="m-title">Add a payment method</h2>
             <div class="grid2">
               <label><span>Type</span><select class="in" id="m-kind"><option value="easypaisa">Easypaisa</option><option value="jazzcash">JazzCash</option><option value="bank">Bank account</option><option value="other">Other</option></select></label>
-              <label><span>Title (users dekhenge)</span><input class="in" id="m-name" placeholder="Easypaisa" /></label>
+              <label><span>Title (users will see this)</span><input class="in" id="m-name" placeholder="Easypaisa" /></label>
               <label><span>Account name</span><input class="in" id="m-acc" /></label>
               <label><span>Account / mobile number</span><input class="in" id="m-num" /></label>
               <label><span>Bank name</span><input class="in" id="m-bank" /></label>
@@ -100,7 +100,7 @@
               <label><span>QR code image</span><input class="in" id="m-qr" type="file" accept="image/*" style="padding-top:8px" /></label>
               <label><span>Sort order</span><input class="in" id="m-sort" type="number" value="0" /></label>
             </div>
-            <label style="margin-top:12px"><span>Instructions</span><textarea class="in" id="m-ins" placeholder="Payment ke baad TID likhein aur screenshot lagayein."></textarea></label>
+            <label style="margin-top:12px"><span>Instructions</span><textarea class="in" id="m-ins" placeholder="Enter the TID after payment and attach a screenshot."></textarea></label>
             <div class="row" style="margin-top:12px"><button class="btn" id="m-save">Save method</button><button class="btn g" id="m-cancel" hidden>Cancel edit</button></div>
           </div>
         </section>
@@ -108,7 +108,7 @@
         <section data-p="keys" hidden>
           <h1>API keys</h1>
           <div class="card">
-            <p class="meta">Keys sirf yahan aur server par rehti hain. Website users ko kabhi nahi dikhti. Khaali chhorne se purani key wahi rahegi.</p>
+            <p class="meta">Keys only live here and on the server. Website users never see them. Leaving a field empty keeps the old key.</p>
             <div class="grid2">
               <label><span>YouTube Data API key (website)</span><input class="in" id="k-yt" type="password" autocomplete="off" placeholder="AIza…" /><small class="meta" id="k-yt-now"></small></label>
               <label><span>YouTube key (GitHub collector, optional)</span><input class="in" id="k-ytc" type="password" autocomplete="off" placeholder="AIza…" /><small class="meta" id="k-ytc-now"></small></label>
@@ -117,7 +117,7 @@
             </div>
             <div class="row" style="margin-top:14px"><button class="btn" id="k-save">Save keys</button><button class="btn g" id="k-test">Test YouTube + Gemini</button></div>
             <p class="meta" id="k-msg"></p>
-            <p class="help">YouTube ki free limit 10,000 units rozana per Google project hai. Zyada users ke liye Google se "quota extension" free mein maangein (YouTube API Services audit form). Ek hi app ke liye kai projects bana kar limit cross karna YouTube ki policy ke khilaf hai.</p>
+            <p class="help">YouTube's free limit is 10,000 units per day per Google project. For more users, request a free "quota extension" from Google (YouTube API Services audit form). Creating several projects for one app to get around the limit is against YouTube's policy.</p>
           </div>
         </section>
 
@@ -130,17 +130,17 @@
               <label><span>Business name</span><input class="in" id="s-biz" /></label>
               <label><span>WhatsApp</span><input class="in" id="s-wa" /></label>
               <label><span>Contact email</span><input class="in" id="s-email" type="email" /></label>
-              <label><span>Announcement banner (Home)</span><input class="in" id="s-ann" placeholder="Khaali = koi banner nahi" /></label>
+              <label><span>Announcement banner (Home)</span><input class="in" id="s-ann" placeholder="Empty = no banner" /></label>
             </div>
-            <label class="sw" style="margin-top:14px"><input type="checkbox" id="s-auto" /> Auto-activate: TID submit hote hi plan active (aap baad mein reject kar ke wapas le sakte hain)</label>
+            <label class="sw" style="margin-top:14px"><input type="checkbox" id="s-auto" /> Auto-activate: the plan activates as soon as a TID is submitted (you can reject it later to take it back)</label>
           </div>
           <div class="card">
             <h2>Credit costs</h2>
             <div class="grid4" id="s-costs"></div>
-            <p class="help">"yt_per_10_units" = har 10 YouTube units ke kitne credits (1 = search 10 credits, map ~70). "strategy" = strategy JSON ke credits (0 = sirf daily JSON count lagega).</p>
+            <p class="help">"yt_per_10_units" = how many credits per 10 YouTube units (1 = a search costs 10 credits, a map ~70). "strategy" = credits per strategy JSON (0 = only the daily JSON count applies).</p>
           </div>
           <div class="card">
-            <h2>Collector (GitHub, har 8 ghante)</h2>
+            <h2>Collector (GitHub, every 8 hours)</h2>
             <div class="grid4">
               <label><span>Regions (Tier-1)</span><input class="in" id="c-reg" placeholder="US,GB,CA,AU" /></label>
               <label><span>Language</span><input class="in" id="c-lang" placeholder="en" /></label>
@@ -149,15 +149,15 @@
               <label><span>Max channel age (days)</span><input class="in" id="c-age" type="number" /></label>
               <label><span>Max profiles / run</span><input class="in" id="c-prof" type="number" /></label>
             </div>
-            <label style="margin-top:12px"><span>Niche keywords (har line mein ek)</span><textarea class="in" id="c-niches" style="min-height:200px"></textarea></label>
-            <p class="help">Har keyword ek search hai (100 YouTube units). 18 keywords × 3 runs ≈ 5,400 units/day.</p>
+            <label style="margin-top:12px"><span>Niche keywords (one per line)</span><textarea class="in" id="c-niches" style="min-height:200px"></textarea></label>
+            <p class="help">Each keyword is one search (100 YouTube units). 18 keywords × 3 runs ≈ 5,400 units/day.</p>
           </div>
           <div class="row"><button class="btn" id="s-save">Save settings</button></div>
         </section>
 
         <section data-p="legal" hidden>
           <h1>Policies</h1>
-          <p class="meta">Khaali chhorne par default policy dikhegi (business name aur WhatsApp ke saath). Kuch likhne par wahi text website par aa jayega. Plain text, khaali line = naya paragraph.</p>
+          <p class="meta">If left empty, the default policy is shown (with the business name and WhatsApp). If you write something, that text appears on the website instead. Plain text, empty line = new paragraph.</p>
           <div class="card" style="display:grid;gap:12px">
             <label><span>Terms of Service</span><textarea class="in" id="l-terms"></textarea></label>
             <label><span>Privacy Policy</span><textarea class="in" id="l-privacy"></textarea></label>

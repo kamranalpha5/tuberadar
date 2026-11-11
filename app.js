@@ -142,13 +142,13 @@
   }
   function resolveChannel(input) {
     var p = parseChannelInput(input);
-    if (!p) return Promise.reject(new Error("Channel URL ya @handle samajh nahi aaya."));
+    if (!p) return Promise.reject(new Error("Could not understand the channel URL or @handle."));
     var params = { part: "snippet,statistics,contentDetails,brandingSettings" };
     if (p.id) params.id = p.id; else if (p.forHandle) params.forHandle = p.forHandle; else params.forUsername = p.forUsername;
     return yt("channels", params).then(function (j) {
       if (j.items && j.items.length) return j.items[0];
-      if (p.handleGuess) return yt("channels", { part: "snippet,statistics,contentDetails", forHandle: p.handleGuess }).then(function (k) { if (k.items && k.items.length) return k.items[0]; throw new Error("Channel nahi mila."); });
-      throw new Error("Channel nahi mila.");
+      if (p.handleGuess) return yt("channels", { part: "snippet,statistics,contentDetails", forHandle: p.handleGuess }).then(function (k) { if (k.items && k.items.length) return k.items[0]; throw new Error("Channel not found."); });
+      throw new Error("Channel not found.");
     });
   }
 
@@ -246,10 +246,10 @@
     $("#x-channels").innerHTML = slice.length ? slice.map(function (c) {
       if (c.locked) return lockedCard(c.ch);
       var ch = c.ch, t = c.top;
-      return '<article class="x-card x-ch"><div class="x-chhead">' + avatar(ch.thumbnail, ch.title) + '<div class="x-chname"><button class="x-chlink" type="button" data-open-ch="' + esc(ch.id) + '" title="Saari videos, outliers aur strategy dekhein"><h3>' + esc(ch.title) + '</h3></button><p class="x-meta">' + (ch.hiddenSubs ? "hidden" : fmt(ch.subscribers)) + " subs · " + esc(ageText(ch.ageDays)) + (ch.country ? " · " + esc(ch.country) : "") + "</p></div>" + ring(c.score) +
+      return '<article class="x-card x-ch"><div class="x-chhead">' + avatar(ch.thumbnail, ch.title) + '<div class="x-chname"><button class="x-chlink" type="button" data-open-ch="' + esc(ch.id) + '" title="See all videos, outliers and strategy"><h3>' + esc(ch.title) + '</h3></button><p class="x-meta">' + (ch.hiddenSubs ? "hidden" : fmt(ch.subscribers)) + " subs · " + esc(ageText(ch.ageDays)) + (ch.country ? " · " + esc(ch.country) : "") + "</p></div>" + ring(c.score) +
         '</div><div class="x-tags"><span class="x-tag">' + esc(c.niche || "") + "</span>" + (t.outlier ? '<span class="x-tag x-tag--viral">🔥 ' + Math.round(t.outlier) + "x outlier</span>" : "") + (isTier1(ch) ? '<span class="x-tag x-tag--new">Tier-1</span>' : "") + monetTag(ch.monet) +
         '</div><a class="x-link x-vid" href="' + ytv(t.id) + '" target="_blank" rel="noopener"><p>' + esc(t.title) + '</p><div class="x-nums"><span><b>' + fmt(t.views) + "</b> views</span><span><b>" + fmt(t.viewsPerHour) + "</b> views/h</span><span><b>+" + fmt(ch.subsPerDay || 0) + "</b> subs/day</span></div></a></article>";
-    }).join("") : '<div class="x-card" style="grid-column:1/-1">' + empty("Is filter par koi channel nahi.", "Min outlier kam karein, channel age barhayein, ya 7 Days / 30 Days tab dekhein.") + "</div>";
+    }).join("") : '<div class="x-card" style="grid-column:1/-1">' + empty("No channels match this filter.", "Lower the min outlier, increase the channel age, or check the 7 Days / 30 Days tab.") + "</div>";
     var pg = ""; if (pages > 1) { pg += '<button data-p="' + Math.max(1, PAGE - 1) + '">‹</button>'; for (var i = 1; i <= pages; i++) pg += '<button data-p="' + i + '"' + (i === PAGE ? ' aria-current="page"' : "") + ">" + i + "</button>"; pg += '<button data-p="' + Math.min(pages, PAGE + 1) + '">›</button>'; }
     $("#x-pager").innerHTML = pg;
 
@@ -260,7 +260,7 @@
     $("#x-trend tbody").innerHTML = rows.length ? rows.map(function (r) {
       var ch = r.c.ch, t = r.c.top;
       return '<tr><td><button class="x-chlink x-tv" type="button" data-open-ch="' + esc(ch.id) + '">' + avatar(ch.thumbnail, ch.title, 36) + '<div><b>' + esc(ch.title) + "</b><span>" + (ch.country ? esc(ch.country) + (isTier1(ch) ? " · Tier-1" : "") : "country n/a") + '</span></div></button></td><td><span class="x-tag">' + esc(r.niche) + '</span></td><td class="x-n">' + fmt(r.subs) + '</td><td class="x-n">+' + fmt(r.spd) + '</td><td class="x-meta">' + esc(ageText(r.age)) + "</td><td>" + (r.out ? '<a class="x-link" href="' + ytv(t.id) + '" target="_blank" rel="noopener" title="' + esc(t.title) + '"><span class="x-tag x-tag--viral">🔥 ' + (r.out >= 10 ? Math.round(r.out) : r.out.toFixed(1)) + "x</span></a>" : '<span class="x-meta">–</span>') + '</td><td class="x-n">' + fmt(r.views) + "</td><td>" + monetTag(ch.monet) + "</td></tr>";
-    }).join("") : '<tr><td colspan="8">' + empty("Koi channel nahi.", "Filters badal kar dekhein.") + "</td></tr>";
+    }).join("") : '<tr><td colspan="8">' + empty("No channels.", "Try changing the filters.") + "</td></tr>";
   }
   $("#x-pager").addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b) return; PAGE = +b.dataset.p; renderRadar(); $("#x-chtitle").scrollIntoView({ behavior: "smooth", block: "start" }); });
   $("#r-win").addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b) return; $$("#r-win button").forEach(function (o) { o.setAttribute("aria-selected", o === b ? "true" : "false"); }); RWIN = b.dataset.v; PAGE = 1; loadData(); });
@@ -306,7 +306,7 @@
       var t = c.topVideo || {};
       if (c.locked) return '<tr class="x-locked"><td><div class="x-blur x-tv">' + avatar(null, "??", 36) + '<div><b>Hidden channel</b><span>' + esc(c.niche || "") + '</span></div></div></td><td class="x-n">' + fmt(c.subscribers) + '</td><td class="x-n"><b>' + fmt(c.avp30) + '</b></td><td><span class="x-tag x-tag--viral">' + c.avpRatio + 'x</span></td><td class="x-n">' + (c.videos30 || "") + '</td><td colspan="2"><button class="x-btn x-btn--ghost x-mini" type="button" data-pricing>🔒 Unlock</button></td></tr>';
       return '<tr><td><button class="x-chlink x-tv" type="button" data-open-ch="' + esc(c.id) + '">' + avatar(c.thumbnail, c.title, 36) + '<div><b>' + esc(c.title) + "</b><span>" + esc(c.niche || "") + " · " + esc(ageText(c.ageDays)) + '</span></div></button></td><td class="x-n">' + fmt(c.subscribers) + '</td><td class="x-n"><b>' + fmt(c.avp30) + '</b></td><td><span class="x-tag x-tag--viral">' + c.avpRatio + 'x</span></td><td class="x-n">' + c.videos30 + '</td><td><a class="x-link" href="' + ytv(t.id) + '" target="_blank" rel="noopener">' + esc(String(t.title || "").slice(0, 60)) + ' <span class="x-meta">' + fmt(t.views) + " views</span></a></td><td>" + monetTag(c.monet) + "</td></tr>";
-    }).join("") : '<tr><td colspan="7">' + empty(all.length ? "Is filter par koi channel nahi." : "Abhi 30-din wali list nahi bani.", all.length ? "AVP vs subs ya Min AVP kam karein." : "GitHub collector din mein ek dafa yeh list banata hai. Pehla run hone dein.") + "</td></tr>";
+    }).join("") : '<tr><td colspan="7">' + empty(all.length ? "No channels match this filter." : "The 30-day list has not been built yet.", all.length ? "Lower the AVP vs subs ratio or the min AVP." : "The GitHub collector builds this list once a day. Wait for the first run.") + "</td></tr>";
   }
   $("#avp-format").addEventListener("segchange", renderAvp);
   ["#avp-subs", "#avp-ratio", "#avp-min"].forEach(function (s) { $(s).addEventListener("change", renderAvp); });
@@ -328,7 +328,7 @@
       DATA = d; setStatus(d);
       if (!d) {
         $("#x-stats").innerHTML = "";
-        $("#x-channels").innerHTML = '<div class="x-card" style="grid-column:1/-1">' + empty("Abhi data nahi hai.", "Collector ka pehla run hone dein (GitHub → Actions → Run workflow).") + "</div>";
+        $("#x-channels").innerHTML = '<div class="x-card" style="grid-column:1/-1">' + empty("No data yet.", "Wait for the collector's first run (GitHub → Actions → Run workflow).") + "</div>";
         $("#x-trend tbody").innerHTML = ""; $("#x-pager").innerHTML = "";
         return;
       }
@@ -347,7 +347,7 @@
   /* ================= VIEW 2: Live Search ================= */
   function runLive() {
     var q = $("#live-q").value.trim();
-    if (!q) { toast("Koi niche keyword likhein.", true); return; }
+    if (!q) { toast("Enter a niche keyword.", true); return; }
     if (needKey()) return;
     var hours = +segVal("live-win") || 24, btn = $("#live-go");
     busy(btn, true, "Searching…");
@@ -373,7 +373,7 @@
         $("#x-live").innerHTML = rows.length ? rows.map(function (r) {
           var v = r.v, th = (v.snippet.thumbnails.medium || v.snippet.thumbnails.default || {}).url;
           return '<div class="x-li"><span class="x-thumb" style="' + thumbStyle(th, hash(v.id)) + '"></span><a class="x-link x-tv" style="min-width:0" href="' + ytv(v.id) + '" target="_blank" rel="noopener"><div><b>' + esc(v.snippet.title) + "</b><span>" + esc(v.snippet.channelTitle) + " · " + fmt(r.subs) + " subs · " + fmt(r.views) + " views · " + ago(v.snippet.publishedAt) + '</span></div></a><div class="x-vph"><span><b>' + fmt(r.vph) + '</b> views/hour</span><div class="x-bar"><i style="width:' + Math.max(3, r.vph / maxV * 100).toFixed(0) + '%"></i></div></div>' + (r.out >= 1.5 ? '<span class="x-tag x-tag--viral">🔥 ' + (r.out >= 10 ? Math.round(r.out) : r.out.toFixed(1)) + "x</span>" : '<span class="x-meta">' + (r.out ? r.out.toFixed(1) + "x" : "–") + "</span>") + "</div>";
-        }).join("") : empty("Is window mein koi video nahi mila.", "48h ya 7d try karein.");
+        }).join("") : empty("No videos found in this window.", "Try 48h or 7d.");
       })
       .catch(function (e) { $("#x-live").innerHTML = empty("Search failed", e.message); toast(e.message, true); })
       .then(function () { busy(btn, false); });
@@ -386,7 +386,7 @@
 
   function runAnalyze() {
     if (needKey()) return Promise.resolve();
-    var input = $("#an-q").value.trim(); if (!input) { toast("Channel URL ya @handle paste karein.", true); return Promise.resolve(); }
+    var input = $("#an-q").value.trim(); if (!input) { toast("Paste a channel URL or @handle.", true); return Promise.resolve(); }
     var btn = $("#an-go"); busy(btn, true, "Analyzing…");
     $("#x-outliers").innerHTML = empty("Analyzing…");
     return resolveChannel(input)
@@ -476,8 +476,8 @@
     start.then(function () {
       if (!CURRENT) return;
       var me = CURRENT.ch, queries = uniq(CURRENT.vids.slice().sort(function (a, b) { return (+b.statistics.viewCount) - (+a.statistics.viewCount); }).slice(0, 8).map(function (v) { return keywordsFromTitle(v.snippet.title); })).filter(Boolean).slice(0, 5);
-      if (!queries.length) { toast("Is channel ke titles se topics nahi nikle.", true); return; }
-      if (!confirm("Competitor map ke liye " + queries.length + " searches chalengi (~" + (queries.length * 100 + 40) + " quota units). Continue?")) return;
+      if (!queries.length) { toast("Could not get topics from this channel's titles.", true); return; }
+      if (!confirm("The competitor map will run " + queries.length + " searches (~" + (queries.length * 100 + 40) + " quota units). Continue?")) return;
       busy(btn, true, "Mapping…"); go("map");
       $("#map-title").textContent = "Mapping " + me.snippet.title + "…";
       var score = {}, sets = [];
@@ -546,7 +546,7 @@
     var STAR = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z"/></svg>';
     $("#x-ideas").innerHTML = ideas.length ? ideas.map(function (c) {
       return '<a class="x-link x-idea" href="' + ytv(c.best.v.id) + '" target="_blank" rel="noopener">' + STAR + "<span>" + esc(c.best.v.snippet.title) + '<br><span class="x-meta">' + esc(c.name) + " · " + fmt(c.best.views) + " views · " + c.mult.toFixed(1) + "x</span></span></a>";
-    }).join("") : '<p class="x-meta">Abhi koi breakout nahi mila.</p>';
+    }).join("") : '<p class="x-meta">No breakout found yet.</p>';
   }
   // #an-map is wired in pro.js (Makina-style Map)
 
@@ -561,7 +561,7 @@
     return BE.call("gemini", Object.assign({ kind: kind || "chat", parts: parts, json: !!json }, extra || {})).catch(apiErr).then(function (r) {
       var t = r.text || "";
       if (!json) return t;
-      try { return JSON.parse(t.replace(/^```json\s*|```\s*$/g, "")); } catch (e) { throw new Error("AI ne sahi JSON nahi diya, dobara try karein."); }
+      try { return JSON.parse(t.replace(/^```json\s*|```\s*$/g, "")); } catch (e) { throw new Error("The AI did not return valid JSON. Please try again."); }
     });
   }
   function videoPart(id) { return { fileData: { fileUri: ytv(id) } }; }
@@ -596,14 +596,14 @@
   function showTranscript(id) {
     if (needGKey()) return;
     var v = findVid(id), title = v ? v.snippet.title : id;
-    modal("Transcript", title + " · Gemini se nikal raha hai, video ki length ke hisaab se 10-60 second…", "", "transcript-" + id + ".txt", id);
+    modal("Transcript", title + " · Getting it from Gemini — 10-60 seconds depending on the video length…", "", "transcript-" + id + ".txt", id);
     getTranscript(id).then(function (t) { modal("Transcript", title, t, "transcript-" + id + ".txt", id); })
       .catch(function (e) { $("#x-msub").textContent = "Fail: " + e.message; toast(e.message, true); });
   }
   function rewriteVideo(id) {
     if (needGKey()) return;
     var v = findVid(id), title = v ? v.snippet.title : id, lang = store.get("lang", "English");
-    modal("Original script (rewrite)", title + " · pehle transcript, phir naya script likha ja raha hai…", "", "script-" + id + ".txt");
+    modal("Original script (rewrite)", title + " · first the transcript, then the new script is being written…", "", "script-" + id + ".txt");
     getTranscript(id).then(function (tx) {
       return gemini([{ text:
         "You are a YouTube scriptwriter. Below is the transcript of a successful video titled \"" + title + "\".\n" +
@@ -614,7 +614,7 @@
         "- Facts and public information may be used, but rephrased and checked; mark anything that needs fact-checking with [CHECK].\n" +
         "- Language: " + lang + ".\n" +
         "Format: first 5 title options and 2 thumbnail ideas (what is in the image + max 4 words of text), then the script with section labels [HOOK 0-15s], [SETUP], [BEAT 1..n], [CLIFFHANGER], [PAYOFF], [CTA] and approximate timestamps.\n\nTRANSCRIPT:\n" + tx.slice(0, 60000) }], false, "rewrite");
-    }).then(function (t) { modal("Original script (rewrite)", title + " · naya script, sirf strategy wahi hai. Upload se pehle khud parh kar personal touch dein.", t, "script-" + id + ".txt"); })
+    }).then(function (t) { modal("Original script (rewrite)", title + " · new script, same strategy. Read it yourself and add a personal touch before uploading.", t, "script-" + id + ".txt"); })
       .catch(function (e) { $("#x-msub").textContent = "Fail: " + e.message; toast(e.message, true); });
   }
 
@@ -671,7 +671,7 @@
       // counts 1 strategy JSON against the plan's daily limit (server-side)
       return BE.call("gemini", { kind: "strategy", start: true }).catch(apiErr).then(function () {
       var picks = st.topOutliers.slice(0, 3), analyses = [];
-      toast("AI top " + picks.length + " outlier videos analyse kar raha hai… (1-3 minute)");
+      toast("AI is analysing the top " + picks.length + " outlier videos… (1-3 minutes)");
       return picks.reduce(function (p, r) {
         return p.then(function () {
           return (r.thumbnail ? thumbB64(r.thumbnail) : Promise.resolve(null)).then(function (img) {
@@ -690,7 +690,7 @@
     }).then(function (out) {
       if (!out) return;
       var name = "strategy-" + String(out.channel.handle || out.channel.id).replace(/[^\w-]/g, "") + ".json";
-      download(name, JSON.stringify(out, null, 2), "application/json"); toast("Strategy JSON download ho gaya ✓");
+      download(name, JSON.stringify(out, null, 2), "application/json"); toast("Strategy JSON downloaded ✓");
     }).catch(function (e) { toast("Strategy failed: " + e.message, true); }).then(function () { busy(b, false); });
   });
 
@@ -709,9 +709,9 @@
   renderQuota();
   var lc = store.get("lastChannel", ""); if (lc) $("#an-q").value = lc;
   $("#an-profile").hidden = true; $("#an-chart").hidden = true;
-  $("#x-live").innerHTML = empty("Koi niche likh kar Search dabayein.", "Har search ~12 credits leti hai.");
-  $("#x-outliers").innerHTML = empty("Channel URL ya @handle paste karke Analyze dabayein.");
-  $("#x-ranks").innerHTML = '<p class="x-meta">Channel Analyzer mein channel analyze karke "Build competitor map" dabayein.</p>';
-  $("#x-net").innerHTML = '<text x="430" y="300" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#646a7e">Map yahan banega</text>';
+  $("#x-live").innerHTML = empty("Type a niche and click Search.", "Each search costs ~12 credits.");
+  $("#x-outliers").innerHTML = empty("Paste a channel URL or @handle and click Analyze.");
+  $("#x-ranks").innerHTML = '<p class="x-meta">Analyse a channel in the Channel Analyzer, then click "Build competitor map".</p>';
+  $("#x-net").innerHTML = '<text x="430" y="300" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#646a7e">Your map will appear here</text>';
   loadData();
 })();

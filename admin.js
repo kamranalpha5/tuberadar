@@ -11,14 +11,14 @@
   function day() { return new Date().toISOString().slice(0, 10); }
   function d(s) { return s ? new Date(s).toLocaleString() : "–"; }
 
-  if (!window.BE || !BE.ready) { document.body.innerHTML = '<div class="login card"><h1>Setup needed</h1><p>assets/config.js mein Supabase URL aur anon key daalein (README dekhein).</p></div>'; return; }
+  if (!window.BE || !BE.ready) { document.body.innerHTML = '<div class="login card"><h1>Setup needed</h1><p>Add the Supabase URL and anon key in assets/config.js (see the README).</p></div>'; return; }
 
   /* ---------- auth gate ---------- */
   var started = false;
   BE.onAuth(function (s) {
     if (!s) { $("#app").hidden = true; $("#login").hidden = false; started = false; return; }
     sb.from("profiles").select("is_admin,email").eq("id", s.user.id).single().then(function (r) {
-      if (!r.data || !r.data.is_admin) { $("#app").hidden = true; $("#login").hidden = false; $("#lg-note").innerHTML = "<b>" + esc(s.user.email) + "</b> admin nahi hai. Supabase SQL Editor mein chalayein:<br><code>update public.profiles set is_admin = true where email = '" + esc(s.user.email) + "';</code>"; return; }
+      if (!r.data || !r.data.is_admin) { $("#app").hidden = true; $("#login").hidden = false; $("#lg-note").innerHTML = "<b>" + esc(s.user.email) + "</b> is not an admin. Run this in the Supabase SQL Editor:<br><code>update public.profiles set is_admin = true where email = '" + esc(s.user.email) + "';</code>"; return; }
       $("#login").hidden = true; $("#app").hidden = false;
       if (!started) { started = true; boot(); }
     });
@@ -53,7 +53,7 @@
       var pays = r[3].data || [], rev = pays.filter(function (p) { return p.status === "approved"; }).reduce(function (s, p) { var pl = PLANS.filter(function (x) { return x.id === p.plan_id; })[0]; return s + (pl ? +pl.price_pkr : 0); }, 0);
       $("#n-pend").hidden = !r[2].count; $("#n-pend").textContent = r[2].count;
       $("#d-stats").innerHTML = [["Users", r[0].count || 0], ["Active paid plans", r[1].count || 0], ["Pending payments", r[2].count || 0], ["Revenue, 30 days", "Rs " + rev.toLocaleString()]].map(function (s) { return '<div class="card"><p>' + s[0] + "</p><strong>" + s[1] + "</strong></div>"; }).join("");
-      $("#d-pays").innerHTML = pays.length ? "<table><tbody>" + pays.slice(0, 10).map(function (p) { return "<tr><td>" + d(p.created_at) + "</td><td>" + esc(p.email) + "</td><td>" + esc(planName(p.plan_id)) + "</td><td>" + esc(p.amount_text) + '</td><td><span class="tag ' + p.status + '">' + p.status + "</span></td></tr>"; }).join("") + "</tbody></table>" : '<p class="meta">Abhi koi payment nahi.</p>';
+      $("#d-pays").innerHTML = pays.length ? "<table><tbody>" + pays.slice(0, 10).map(function (p) { return "<tr><td>" + d(p.created_at) + "</td><td>" + esc(p.email) + "</td><td>" + esc(planName(p.plan_id)) + "</td><td>" + esc(p.amount_text) + '</td><td><span class="tag ' + p.status + '">' + p.status + "</span></td></tr>"; }).join("") + "</tbody></table>" : '<p class="meta">No payments yet.</p>';
     }).catch(fail);
   }
 
@@ -67,13 +67,13 @@
       $("#p-rows").innerHTML = rows.length ? rows.map(function (p) {
         return "<tr><td>" + d(p.created_at) + "</td><td>" + esc(p.email) + "</td><td>" + esc(planName(p.plan_id)) + "</td><td>" + esc(p.amount_text) + "</td><td>" + esc(methodName(p.method_id)) + "</td><td><b>" + esc(p.tid) + "</b></td><td>" + (p.screenshot_url ? '<button class="btn g s" data-proof="' + esc(p.screenshot_url) + '">View</button>' : '<span class="meta">none</span>') + '</td><td><span class="tag ' + p.status + '">' + p.status + "</span>" + (p.note ? '<br><small class="meta">' + esc(p.note) + "</small>" : "") + "</td><td>" +
           (p.status !== "approved" ? '<button class="btn s" data-ok="' + p.id + '">Approve</button> ' : "") + (p.status !== "rejected" ? '<button class="btn r s" data-no="' + p.id + '">Reject</button>' : "") + "</td></tr>";
-      }).join("") : '<tr><td colspan="9" class="meta">Koi payment nahi.</td></tr>';
+      }).join("") : '<tr><td colspan="9" class="meta">No payments.</td></tr>';
     }).catch(fail);
   }
   $("#p-rows").addEventListener("click", function (e) {
     var ok = e.target.closest("[data-ok]"), no = e.target.closest("[data-no]"), pr = e.target.closest("[data-proof]");
     if (ok) sb.rpc("approve_payment", { p_id: +ok.dataset.ok }).then(chk).then(function () { toast("Approved, plan active ✓"); pays(); dash(); }).catch(fail);
-    if (no) { var note = prompt("Reject ki wajah (user ko dikhegi):", "TID match nahi hui"); if (note === null) return; sb.rpc("reject_payment", { p_id: +no.dataset.no, p_note: note }).then(chk).then(function () { toast("Rejected"); pays(); }).catch(fail); }
+    if (no) { var note = prompt("Reason for rejection (the user will see it):", "TID did not match"); if (note === null) return; sb.rpc("reject_payment", { p_id: +no.dataset.no, p_note: note }).then(chk).then(function () { toast("Rejected"); pays(); }).catch(fail); }
     if (pr) sb.storage.from("payment-proofs").createSignedUrl(pr.dataset.proof, 600).then(chk).then(function (r) { window.open(r.data.signedUrl, "_blank"); }).catch(fail);
   });
 
@@ -90,13 +90,13 @@
         return "<tr><td>" + esc(u.email) + (u.is_admin ? ' <span class="tag">admin</span>' : "") + (u.banned ? ' <span class="tag rejected">blocked</span>' : "") + "<br><small class=\"meta\">joined " + d(u.created_at) + "</small></td><td>" + esc(planName(u.plan_id)) + (u.plan_id !== "free" && !exp ? ' <span class="tag rejected">expired</span>' : "") + "</td><td>" + d(u.plan_expires_at) + "</td><td>" + (u.shared_group || "–") + "</td><td>" + (x.credits_used || 0) + " cr · " + (x.json_used || 0) + " json</td>" +
           '<td><div class="row" style="flex-wrap:nowrap"><select class="in" style="width:150px" data-plan="' + u.id + '">' + opts.replace('value="' + u.plan_id + '"', 'value="' + u.plan_id + '" selected') + '</select><input class="in" style="width:70px" type="number" value="30" data-days="' + u.id + '" title="days"><button class="btn s" data-set="' + u.id + '">Set</button></div></td>' +
           '<td><button class="btn g s" data-reset="' + u.id + '">Reset today</button> <button class="btn ' + (u.banned ? "g" : "r") + ' s" data-ban="' + u.id + '" data-v="' + (u.banned ? 0 : 1) + '">' + (u.banned ? "Unblock" : "Block") + "</button></td></tr>";
-      }).join("") || '<tr><td colspan="7" class="meta">Koi user nahi.</td></tr>';
+      }).join("") || '<tr><td colspan="7" class="meta">No users.</td></tr>';
     }).catch(fail);
   }
   $("#u-rows").addEventListener("click", function (e) {
     var s = e.target.closest("[data-set]"), rs = e.target.closest("[data-reset]"), b = e.target.closest("[data-ban]");
     if (s) { var id = s.dataset.set; sb.rpc("admin_set_plan", { p_user: id, p_plan: $('[data-plan="' + id + '"]').value, p_days: +$('[data-days="' + id + '"]').value || 30 }).then(chk).then(function () { toast("Plan updated ✓"); users(); }).catch(fail); }
-    if (rs) sb.from("usage").delete().eq("user_id", rs.dataset.reset).eq("day", day()).then(chk).then(function () { toast("Aaj ki usage reset ✓"); users(); }).catch(fail);
+    if (rs) sb.from("usage").delete().eq("user_id", rs.dataset.reset).eq("day", day()).then(chk).then(function () { toast("Today's usage reset ✓"); users(); }).catch(fail);
     if (b) sb.from("profiles").update({ banned: b.dataset.v === "1" }).eq("id", b.dataset.ban).then(chk).then(function () { toast("Saved ✓"); users(); }).catch(fail);
   });
 
@@ -106,7 +106,7 @@
     $("#pl-list").innerHTML = PLANS.map(function (p) {
       return '<div class="card" data-pid="' + esc(p.id) + '"><div class="row" style="justify-content:space-between"><h2>' + esc(p.name) + ' <small class="meta">(' + esc(p.id) + ')</small></h2><div class="row"><label class="sw"><input type="checkbox" data-f="shared"' + (p.shared ? " checked" : "") + '> Shared</label><label class="sw"><input type="checkbox" data-f="highlight"' + (p.highlight ? " checked" : "") + '> Highlight</label><label class="sw"><input type="checkbox" data-f="active"' + (p.active ? " checked" : "") + '> Active</label></div></div><div class="grid4">' +
         PF.map(function (f) { return "<label><span>" + f[1] + '</span><input class="in" type="' + f[2] + '" data-f="' + f[0] + '" value="' + esc(p[f[0]] == null ? "" : p[f[0]]) + '"></label>'; }).join("") +
-        '</div><label style="margin-top:12px"><span>Features (har line mein ek)</span><textarea class="in" data-f="features" style="min-height:90px">' + esc((p.features || []).join("\n")) + '</textarea></label><div class="row" style="margin-top:10px"><button class="btn" data-savep="' + esc(p.id) + '">Save ' + esc(p.name) + "</button></div></div>";
+        '</div><label style="margin-top:12px"><span>Features (one per line)</span><textarea class="in" data-f="features" style="min-height:90px">' + esc((p.features || []).join("\n")) + '</textarea></label><div class="row" style="margin-top:10px"><button class="btn" data-savep="' + esc(p.id) + '">Save ' + esc(p.name) + "</button></div></div>";
     }).join("");
   }
   $("#pl-list").addEventListener("click", function (e) {
@@ -117,14 +117,14 @@
       else if (i.type === "number") up[k] = i.value === "" ? null : +i.value; else up[k] = i.value;
     });
     ["price_usd", "price_pkr", "period_days", "daily_credits", "daily_json", "sort"].forEach(function (k) { if (up[k] == null) up[k] = 0; });
-    sb.from("plans").update(up).eq("id", b.dataset.savep).then(chk).then(function () { toast("Plan saved ✓ (website par foran)"); return sb.from("plans").select("*").order("sort"); }).then(function (r) { PLANS = r.data || PLANS; }).catch(fail);
+    sb.from("plans").update(up).eq("id", b.dataset.savep).then(chk).then(function () { toast("Plan saved ✓ (live on the website immediately)"); return sb.from("plans").select("*").order("sort"); }).then(function (r) { PLANS = r.data || PLANS; }).catch(fail);
   });
 
   /* ---------- payment methods ---------- */
   function methods() {
     sb.from("payment_methods").select("*").order("sort").then(chk).then(function (r) {
       METHODS = r.data || [];
-      $("#m-rows").innerHTML = METHODS.length ? METHODS.map(function (m) { return "<tr><td>" + (m.qr_url ? '<img class="qr" src="' + esc(m.qr_url) + '" alt="">' : '<span class="meta">no QR</span>') + "</td><td><b>" + esc(m.title) + '</b><br><small class="meta">' + esc(m.kind) + "</small></td><td>" + esc(m.account_name || "") + "<br>" + esc(m.account_number || "") + (m.iban ? "<br>" + esc(m.iban) : "") + '</td><td><label class="sw"><input type="checkbox" data-act="' + m.id + '"' + (m.active ? " checked" : "") + '></label></td><td><button class="btn g s" data-edit="' + m.id + '">Edit</button> <button class="btn r s" data-del="' + m.id + '">Delete</button></td></tr>'; }).join("") : '<tr><td colspan="5" class="meta">Abhi koi method nahi. Neeche Easypaisa ya bank add karein.</td></tr>';
+      $("#m-rows").innerHTML = METHODS.length ? METHODS.map(function (m) { return "<tr><td>" + (m.qr_url ? '<img class="qr" src="' + esc(m.qr_url) + '" alt="">' : '<span class="meta">no QR</span>') + "</td><td><b>" + esc(m.title) + '</b><br><small class="meta">' + esc(m.kind) + "</small></td><td>" + esc(m.account_name || "") + "<br>" + esc(m.account_number || "") + (m.iban ? "<br>" + esc(m.iban) : "") + '</td><td><label class="sw"><input type="checkbox" data-act="' + m.id + '"' + (m.active ? " checked" : "") + '></label></td><td><button class="btn g s" data-edit="' + m.id + '">Edit</button> <button class="btn r s" data-del="' + m.id + '">Delete</button></td></tr>'; }).join("") : '<tr><td colspan="5" class="meta">No methods yet. Add Easypaisa or a bank below.</td></tr>';
     }).catch(fail);
   }
   $("#m-rows").addEventListener("click", function (e) {
@@ -156,10 +156,10 @@
     if ($("#k-ytc").value.trim()) up.youtube_collector_key = $("#k-ytc").value.trim();
     if ($("#k-gm").value.trim()) up.gemini_key = $("#k-gm").value.trim();
     if ($("#k-model").value.trim()) up.gemini_model = $("#k-model").value.trim();
-    sb.from("app_secrets").update(up).eq("id", 1).then(chk).then(function () { ["#k-yt", "#k-ytc", "#k-gm"].forEach(function (s) { $(s).value = ""; }); toast("Keys saved ✓ (1 minute mein live)"); keys(); }).catch(fail);
+    sb.from("app_secrets").update(up).eq("id", 1).then(chk).then(function () { ["#k-yt", "#k-ytc", "#k-gm"].forEach(function (s) { $(s).value = ""; }); toast("Keys saved ✓ (live in 1 minute)"); keys(); }).catch(fail);
   });
   $("#k-test").addEventListener("click", function () {
-    $("#k-msg").textContent = "Testing… (1 minute tak purani key cache ho sakti hai)";
+    $("#k-msg").textContent = "Testing… (the old key may stay cached for up to 1 minute)";
     var a = BE.call("yt", { path: "videos", params: { part: "id", id: "dQw4w9WgXcQ" } }).then(function () { return "YouTube ✓"; }, function (e) { return "YouTube ✗ " + e.message; });
     var b = BE.call("gemini", { kind: "chat", parts: [{ text: "Reply with OK" }] }).then(function () { return "Gemini ✓"; }, function (e) { return "Gemini ✗ " + e.message; });
     Promise.all([a, b]).then(function (r) { $("#k-msg").textContent = r.join(" · "); });
@@ -179,7 +179,7 @@
     var up = { site_name: $("#s-name").value.trim() || "TubeRadar", tagline: $("#s-tag").value.trim(), business_name: $("#s-biz").value.trim(), whatsapp: $("#s-wa").value.trim(), contact_email: $("#s-email").value.trim(), announcement: $("#s-ann").value.trim(), auto_activate: $("#s-auto").checked, credit_costs: costs,
       collector: { regions: $("#c-reg").value.split(",").map(function (x) { return x.trim().toUpperCase(); }).filter(Boolean), relevanceLanguage: $("#c-lang").value.trim(), minViews: +$("#c-minv").value || 3000, minOutlier: +$("#c-mino").value || 2, newChannelMaxAgeDays: +$("#c-age").value || 90, maxProfilesPerRun: +$("#c-prof").value || 120 },
       niches: $("#c-niches").value.split("\n").map(function (x) { return x.trim(); }).filter(Boolean), updated_at: new Date().toISOString() };
-    sb.from("site_settings").update(up).eq("id", 1).then(chk).then(function () { SET = Object.assign(SET || {}, up); toast("Settings saved ✓ (website par foran)"); }).catch(fail);
+    sb.from("site_settings").update(up).eq("id", 1).then(chk).then(function () { SET = Object.assign(SET || {}, up); toast("Settings saved ✓ (live on the website immediately)"); }).catch(fail);
   });
 
   /* ---------- policies ---------- */

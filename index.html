@@ -427,11 +427,11 @@
                 <label class="x-fgroup"><span class="x-flabel">Max subscribers</span><select class="x-select" id="f-subs"><option value="10000">10K</option><option value="50000">50K</option><option value="100000" selected>100K</option><option value="500000">500K</option><option value="1e12">Any</option></select></label>
                 <label class="x-fgroup"><span class="x-flabel">Min outlier</span><select class="x-select" id="f-out"><option value="0">Any</option><option value="2">2x</option><option value="3" selected>3x</option><option value="5">5x</option><option value="10">10x</option></select></label>
                 <button class="x-toggle" id="x-monet" aria-pressed="true"><i></i>Monetization complete</button>
-                <button class="x-toggle" id="x-tier1" aria-pressed="false" title="Sirf woh channels jin ka country US, UK, CA, AU ya doosra Tier-1 hai"><i></i>Tier-1 only</button>
+                <button class="x-toggle" id="x-tier1" aria-pressed="false" title="Only channels whose country is US, UK, CA, AU or another Tier-1 country"><i></i>Tier-1 only</button>
               </div>
               <div>
                 <div class="x-sechead"><h2 id="x-chtitle">New channels going viral</h2><p id="x-chcount">—</p></div>
-                <div class="x-unlock" id="x-unlock" hidden><b>Unlock all growing channels</b><span>Free plan par sirf 2 channels dikhte hain. Baqi dekhne ke liye plan lein.</span><button class="x-btn x-btn--light" type="button" data-pricing>Get Access Now</button></div>
+                <div class="x-unlock" id="x-unlock" hidden><b>Unlock all growing channels</b><span>The free plan shows only 2 channels. Get a plan to see the rest.</span><button class="x-btn x-btn--light" type="button" data-pricing>Get Access Now</button></div>
                 <div class="x-grid" id="x-channels"></div>
                 <div class="x-pager" id="x-pager"></div>
               </div>
@@ -493,7 +493,7 @@
                   <div class="x-seg" data-seg id="live-win"><button data-v="24" aria-pressed="true">24h</button><button data-v="48" aria-pressed="false">48h</button><button data-v="168" aria-pressed="false">7d</button></div>
                   <button class="x-btn" id="live-go">Search YouTube</button>
                 </div>
-                <p class="x-note"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Har search ~12 credits</p>
+                <p class="x-note"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Each search costs ~12 credits</p>
               </div>
               <div>
                 <div class="x-sechead"><h2 id="live-title">Search a niche to see what is breaking out</h2><p id="live-sub">Sorted by views/hour</p></div>
@@ -532,7 +532,7 @@
                 <div class="x-card x-list" id="x-outliers"></div>
               </div>
               <div id="an-allwrap" hidden>
-                <div class="x-sechead"><h2 id="an-alltitle">All videos</h2><p>Transcript aur Rewrite ke liye Settings mein Gemini key chahiye</p></div>
+                <div class="x-sechead"><h2 id="an-alltitle">All videos</h2><p>Transcript and Rewrite need a Gemini key (set by the admin)</p></div>
                 <div class="x-card x-tablewrap">
                   <table class="x-table" id="an-all">
                     <thead><tr><th scope="col">Video</th><th scope="col">Views</th><th scope="col">Published</th><th scope="col">Outlier</th><th scope="col">Length</th><th scope="col">Tools</th></tr></thead>
@@ -599,7 +599,7 @@
                   <input class="x-input" id="tp-q" type="text" placeholder="Your channel: link, @handle or ID" aria-label="Your channel" />
                   <button class="x-btn x-btn--ghost" id="tp-find">Find competitors</button>
                 </div>
-                <div><span class="x-flabel">Channels to learn from</span><div class="x-chips" id="tp-learn"><span class="x-meta">None yet: Find competitors dabayein, ya Map se channels "Learn from it" karein.</span></div>
+                <div><span class="x-flabel">Channels to learn from</span><div class="x-chips" id="tp-learn"><span class="x-meta">None yet: click Find competitors, or mark channels "Learn from it" on the Map.</span></div>
                   <form class="x-liverow" id="tp-add"><input class="x-input" type="text" placeholder="A competitor the map didn't find? Add it (@handle)" aria-label="Add competitor" /><button class="x-btn x-btn--ghost" type="submit">Add</button></form></div>
                 <div class="x-liverow">
                   <label class="x-fgroup"><span class="x-flabel">Topics each time</span><input class="x-input" id="tp-n" type="number" min="1" max="20" value="8" /></label>
@@ -608,7 +608,7 @@
                 </div>
                 <div class="x-liverow"><button class="x-toggle" id="tp-check" aria-pressed="false"><i></i>Check topics on YouTube (100 units/topic)</button><button class="x-btn" id="tp-go">Generate topics</button><button class="x-btn x-btn--ghost" id="tp-ask">Ask a question</button></div>
               </div>
-              <div class="x-sechead"><h2 id="tp-title">Topics</h2><p id="tp-sub">Gemini aapke aur competitors ke breakout videos parh kar topics banata hai</p></div>
+              <div class="x-sechead"><h2 id="tp-title">Topics</h2><p id="tp-sub">Gemini reads your and your competitors' breakout videos to create topics</p></div>
               <div class="x-topics" id="tp-list"></div>
               <form class="x-card x-pad x-liverow" id="tp-more" hidden><input class="x-input" id="tp-morein" type="text" placeholder="Ask for more: e.g. More titles for #1 · Shorter titles for #3 · Only topics about the Tudors" aria-label="Ask for more" /><button class="x-btn" type="submit">Send</button></form>
             </section>
@@ -627,7 +627,7 @@
             <section class="x-view" id="view-tools" data-title="Tools" hidden>
               <p class="x-meta">Quick tools for any YouTube video.</p>
               <div class="x-card x-pad"><div class="x-liverow"><input class="x-input" id="tl-q" type="text" placeholder="Paste a YouTube video link" aria-label="Video link" /><button class="x-btn" id="tl-tx">Get transcript</button><button class="x-btn x-btn--ghost" id="tl-an">Analyse video (hook, arc, thumbnail)</button><button class="x-btn x-btn--ghost" id="tl-rw">Original rewrite</button></div></div>
-              <div class="x-card x-pad" id="tl-thumb"><h2>Download thumbnail</h2><p class="x-meta">Video link paste karein, phir size chunein.</p><div class="x-liverow" id="tl-sizes"></div></div>
+              <div class="x-card x-pad" id="tl-thumb"><h2>Download thumbnail</h2><p class="x-meta">Paste a video link, then choose a size.</p><div class="x-liverow" id="tl-sizes"></div></div>
             </section>
 
             <!-- VIEW 5 -->
@@ -635,16 +635,16 @@
               <div class="x-settings">
                 <div class="x-card x-pad" id="acc-card">
                   <h2>Your account</h2>
-                  <div id="acc-body"><p class="x-meta">Login karein.</p></div>
+                  <div id="acc-body"><p class="x-meta">Sign in to see your account.</p></div>
                 </div>
                 <div class="x-card x-pad">
                   <h2>Today's usage</h2>
                   <div id="acc-usage"></div>
-                  <p class="x-help">Credits har din 00:00 UTC (Pakistan mein subah 5 baje) reset hote hain.</p>
+                  <p class="x-help">Credits reset every day at 00:00 UTC (5:00 AM in Pakistan).</p>
                 </div>
                 <div class="x-card x-pad">
                   <h2>Payments</h2>
-                  <div id="acc-pays"><p class="x-meta">Abhi koi payment nahi.</p></div>
+                  <div id="acc-pays"><p class="x-meta">No payments yet.</p></div>
                 </div>
                 <div class="x-card x-pad">
                   <h2>Preferences</h2>
@@ -677,7 +677,7 @@
           <button class="x-btn x-btn--ghost" type="button" id="au-google">Continue with Google</button>
           <button class="x-linkbtn" type="button" id="au-forgot">Forgot password?</button>
           <p class="x-meta" id="au-msg"></p>
-          <p class="x-help">Sign up karke aap <a href="legal.html#terms" target="_blank">Terms</a> aur <a href="legal.html#privacy" target="_blank">Privacy Policy</a> se agree karte hain.</p>
+          <p class="x-help">By signing up you agree to the <a href="legal.html#terms" target="_blank">Terms</a> and <a href="legal.html#privacy" target="_blank">Privacy Policy</a>.</p>
         </form>
       </div>
     </div>
@@ -695,7 +695,7 @@
               <div id="pr-method"></div>
             </div>
             <form id="pr-form" class="x-authform">
-              <ol class="x-steps"><li>Upar diye QR ya account par exact amount bhejein.</li><li>Transaction ID (TID) yahan likhein, screenshot lagayein.</li><li id="pr-step3txt">Admin approve karte hi plan active.</li></ol>
+              <ol class="x-steps"><li>Send the exact amount to the QR code or account above.</li><li>Enter the Transaction ID (TID) here and attach a screenshot.</li><li id="pr-step3txt">Your plan activates as soon as the admin approves it.</li></ol>
               <label class="x-fgroup"><span class="x-flabel">Transaction ID (TID)</span><input class="x-input" id="pr-tid" type="text" required minlength="6" /></label>
               <label class="x-fgroup"><span class="x-flabel">Payment screenshot</span><input class="x-input" id="pr-shot" type="file" accept="image/*" /></label>
               <button class="x-btn" type="submit">I have paid · Submit</button>
@@ -713,7 +713,7 @@
       <div class="x-chatlog" id="bot-log"></div>
       <div class="x-chips" id="bot-sugg"></div>
       <form class="x-liverow" id="bot-form"><input class="x-input" id="bot-in" type="text" placeholder="Ask anything about your niche…" aria-label="Ask a question" autocomplete="off" /><button class="x-btn" type="submit">Send</button></form>
-      <p class="x-note">Har jawab ~3 credits. @handle likhein to YouTube se us channel ki latest videos bhi dekhta hai.</p>
+      <p class="x-note">Each answer costs ~3 credits. Add an @handle and it also looks at that channel's latest videos on YouTube.</p>
     </aside>
     <div class="x-toast" id="x-toast" role="status" aria-live="polite"></div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>

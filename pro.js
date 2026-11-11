@@ -30,7 +30,7 @@
   });
   $$(".x-modal").forEach(function (m) { m.addEventListener("click", function (e) { if (e.target === m) m.hidden = true; }); });
   document.addEventListener("tr:needlogin", function () { openAuth("in"); });
-  document.addEventListener("tr:limit", function () { toast("Aaj ki limit poori ho gayi. Upgrade karein ya kal try karein.", true); setTimeout(openPricing, 900); });
+  document.addEventListener("tr:limit", function () { toast("Today's limit is reached. Upgrade your plan or try again tomorrow.", true); setTimeout(openPricing, 900); });
 
   /* ================= site settings + auth ================= */
   function applySite() {
@@ -44,7 +44,7 @@
     BE.plans().then(function (p) { PLANS = p; }).catch(function () {});
   } else {
     applySite();
-    setTimeout(function () { toast("Demo mode: assets/config.js mein Supabase URL aur anon key daalein.", true); }, 800);
+    setTimeout(function () { toast("Demo mode: add your Supabase URL and anon key in assets/config.js.", true); }, 800);
   }
   function refreshMe() {
     if (!BE.ready || !BE.user()) { ME = null; renderMe(); return Promise.resolve(); }
@@ -64,8 +64,8 @@
     if (light) return;
     // account page
     if (!u) {
-      $("#acc-body").innerHTML = '<p class="x-meta">Aap signed in nahi hain.</p><div class="x-liverow"><button class="x-btn" type="button" id="acc-login">Sign in / Create account</button></div>';
-      $("#acc-usage").innerHTML = '<p class="x-meta">Login ke baad yahan credits aur limits dikhengi.</p>';
+      $("#acc-body").innerHTML = '<p class="x-meta">You are not signed in.</p><div class="x-liverow"><button class="x-btn" type="button" id="acc-login">Sign in / Create account</button></div>';
+      $("#acc-usage").innerHTML = '<p class="x-meta">Your credits and limits will appear here after you sign in.</p>';
       $("#acc-pays").innerHTML = '<p class="x-meta">–</p>';
       $("#acc-login").onclick = function () { openAuth("in"); };
       return;
@@ -87,14 +87,14 @@
     $("#acc-pays").innerHTML = (ME.payments || []).length ? ME.payments.map(function (p) {
       var col = p.status === "approved" ? "x-tag--money" : p.status === "rejected" ? "x-tag--viral" : "x-tag--warn";
       return '<div class="x-acc-row"><span>' + new Date(p.created_at).toLocaleString() + " · " + esc(p.plan_id) + " · TID " + esc(p.tid) + '</span><span class="x-tag ' + col + '">' + esc(p.status) + (p.note ? " · " + esc(p.note) : "") + "</span></div>";
-    }).join("") : '<p class="x-meta">Abhi koi payment nahi.</p>';
+    }).join("") : '<p class="x-meta">No payments yet.</p>';
   }
   $("#x-me").addEventListener("click", function () { if (ME) T.go("settings"); else openAuth("in"); });
 
   /* login modal */
   var AUMODE = "in";
   function openAuth(mode) {
-    if (!BE.ready) { toast("Backend set nahi hua (assets/config.js).", true); return; }
+    if (!BE.ready) { toast("Backend is not set up (assets/config.js).", true); return; }
     AUMODE = mode || "in"; setAuthMode(); $("#au-msg").textContent = ""; openModal("#x-auth"); setTimeout(function () { $("#au-email").focus(); }, 50);
   }
   function setAuthMode() {
@@ -108,22 +108,22 @@
     e.preventDefault(); var em = $("#au-email").value.trim(), pw = $("#au-pw").value, b = $("#au-submit");
     T.busy(b, true, "Please wait…"); $("#au-msg").textContent = "";
     (AUMODE === "up" ? BE.signUp(em, pw, $("#au-name").value.trim()) : BE.signIn(em, pw)).then(function (r) {
-      if (AUMODE === "up" && !(r.data && r.data.session)) { $("#au-msg").textContent = "Account ban gaya. Email mein confirm link par click karein, phir sign in karein."; return; }
+      if (AUMODE === "up" && !(r.data && r.data.session)) { $("#au-msg").textContent = "Account created. Click the confirmation link in your email, then sign in."; return; }
       $("#x-auth").hidden = true; toast("Welcome! ✓");
     }).catch(function (er) { $("#au-msg").textContent = er.message; }).then(function () { T.busy(b, false); });
   });
   $("#au-google").addEventListener("click", function () { BE.google().catch(function (er) { $("#au-msg").textContent = er.message; }); });
   $("#au-forgot").addEventListener("click", function () {
-    var em = $("#au-email").value.trim(); if (!em) { $("#au-msg").textContent = "Pehle email likhein."; return; }
-    BE.reset(em).then(function () { $("#au-msg").textContent = "Password reset link email kar diya."; }).catch(function (er) { $("#au-msg").textContent = er.message; });
+    var em = $("#au-email").value.trim(); if (!em) { $("#au-msg").textContent = "Enter your email first."; return; }
+    BE.reset(em).then(function () { $("#au-msg").textContent = "Password reset link sent by email."; }).catch(function (er) { $("#au-msg").textContent = er.message; });
   });
 
   /* pricing + payment */
   var PAYPLAN = null, PAYMETHOD = null;
   function openPricing() {
-    if (!BE.ready) { toast("Backend set nahi hua.", true); return; }
+    if (!BE.ready) { toast("Backend is not set up.", true); return; }
     $("#pr-step1").hidden = false; $("#pr-step2").hidden = true; openModal("#x-pricing");
-    Promise.all([BE.plans(), BE.methods()]).then(function (r) { PLANS = r[0]; METHODS = r[1]; drawPlans(); }).catch(function (e) { $("#pr-plans").innerHTML = T.empty("Plans load nahi hue", e.message); });
+    Promise.all([BE.plans(), BE.methods()]).then(function (r) { PLANS = r[0]; METHODS = r[1]; drawPlans(); }).catch(function (e) { $("#pr-plans").innerHTML = T.empty("Plans could not be loaded", e.message); });
   }
   function drawPlans() {
     var cur = ME && ME.plan ? ME.plan.id : "free";
@@ -138,10 +138,10 @@
     var b = e.target.closest("[data-plan]"); if (!b) return;
     if (!BE.user()) { $("#x-pricing").hidden = true; openAuth("up"); return; }
     PAYPLAN = PLANS.filter(function (p) { return p.id === b.dataset.plan; })[0];
-    if (!METHODS.length) { toast("Admin ne abhi payment method add nahi kiya. WhatsApp karein.", true); window.open(waLink(), "_blank"); return; }
+    if (!METHODS.length) { toast("The admin has not added a payment method yet. Message us on WhatsApp.", true); window.open(waLink(), "_blank"); return; }
     $("#pr-step1").hidden = true; $("#pr-step2").hidden = false;
     $("#pr-plan").textContent = PAYPLAN.name; $("#pr-amount").textContent = "Rs " + fmt(PAYPLAN.price_pkr) + "  ($" + PAYPLAN.price_usd + ")";
-    $("#pr-step3txt").textContent = SITE.auto_activate ? "Submit karte hi plan active ho jayega (admin baad mein check karega)." : "Admin approve karte hi plan active (aam taur par kuch ghante).";
+    $("#pr-step3txt").textContent = SITE.auto_activate ? "Your plan activates as soon as you submit (the admin will check it later)." : "Your plan activates once the admin approves it (usually within a few hours).";
     $("#pr-methods").innerHTML = METHODS.map(function (m, i) { return '<button type="button" data-m="' + m.id + '" aria-selected="' + (i ? "false" : "true") + '">' + esc(m.title) + "</button>"; }).join("");
     showMethod(METHODS[0]);
   });
@@ -159,7 +159,7 @@
     var up = f ? BE.upload("payment-proofs", BE.user().id + "/" + Date.now() + "-" + f.name.replace(/[^\w.]/g, "_"), f) : Promise.resolve(null);
     up.then(function (path) { return BE.call("pay", { plan_id: PAYPLAN.id, method_id: PAYMETHOD.id, tid: tid, screenshot_url: path }); })
       .then(function (r) {
-        $("#pr-msg").textContent = r.status === "approved" ? "Plan active ho gaya ✓" : "Payment submit ho gayi. Admin approve karte hi plan active hoga.";
+        $("#pr-msg").textContent = r.status === "approved" ? "Plan activated ✓" : "Payment submitted. Your plan will activate once the admin approves it.";
         $("#pr-tid").value = ""; refreshMe(); if (r.status === "approved") loadDataSoon();
       }).catch(function (er) { $("#pr-msg").textContent = er.message; }).then(function () { T.busy(b, false); });
   });
@@ -204,7 +204,7 @@
     $("#hm-break").innerHTML = cards.length ? cards.slice(0, 16).map(function (c) {
       var v = c.v, n = c.n;
       return '<a class="x-vcard" href="' + T.ytv(v.id) + '" target="_blank" rel="noopener"><div class="x-vthumb" style="background-image:url(\'https://i.ytimg.com/vi/' + esc(v.id) + '/mqdefault.jpg\')">' + (v.dur ? '<span class="x-dur">' + durTxt(v.dur) + "</span>" : "") + '</div><div class="x-vmeta"><span class="x-xb">' + (v.out >= 10 ? Math.round(v.out) : v.out.toFixed(1)) + "×</span>" + fmt(v.views) + " views" + (v.at ? " · " + T.ago(v.at) : "") + "</div><p>" + esc(v.title) + '</p><div class="x-vch">' + (n.thumb ? '<img src="' + esc(n.thumb) + '" alt="" referrerpolicy="no-referrer">' : "") + esc(n.title) + " · " + fmt(n.subs) + " subscribers</div></a>";
-    }).join("") : '<div class="x-card" style="grid-column:1/-1">' + T.empty("Abhi koi breakout nahi.", "Apna channel daal kar Find competitors dabayein.") + "</div>";
+    }).join("") : '<div class="x-card" style="grid-column:1/-1">' + T.empty("No breakout yet.", "Add your channel and click Find competitors.") + "</div>";
     renderOutl(); renderNiches(d);
   }
   var HMWIN = "24h", HMCACHE = {};
@@ -221,7 +221,7 @@
       var barhtml = '<span style="display:inline-flex;gap:3px;margin-top:4px">' + [0, 1, 2, 3].map(function (i) { return '<i style="width:18px;height:3px;border-radius:2px;background:' + (i < bars ? (o >= 10 ? "#5b5bf6" : "#22c55e") : "#e5e7eb") + '"></i>'; }).join("") + "</span>";
       if (c.locked) return '<div class="x-orow x-locked"><div class="x-oth x-blur" style="background:' + T.thumbStyle(null, T.hash(String(c.subscribers))).replace("background:", "") + '"></div><div class="x-blur"><b>Hidden channel</b><span class="x-meta">' + fmt(c.subscribers) + ' subscribers</span></div><div class="x-oval">' + o.toFixed(1) + "×" + barhtml + "</div></div>";
       return '<button class="x-orow x-chlink" type="button" data-open-ch="' + esc(c.id) + '" style="width:100%"><div class="x-oth" style="background-image:url(\'' + esc(c.thumbnail || "") + '\')"></div><div style="min-width:0"><b>' + esc(c.title) + '</b><span class="x-meta">' + fmt(c.subscribers) + ' subscribers</span></div><div class="x-oval">' + o.toFixed(1) + "×" + barhtml + "</div></button>";
-    }).join("") + (list.some(function (c) { return c.locked; }) ? '<div class="x-unlock" style="margin:10px 0 0"><b>Unlock Niche Finder</b><span>Saare channels dekhne ke liye plan lein.</span><button class="x-btn x-btn--light" type="button" data-pricing>Get Access Now</button></div>' : "") : T.empty("Is window mein abhi koi channel nahi.");
+    }).join("") + (list.some(function (c) { return c.locked; }) ? '<div class="x-unlock" style="margin:10px 0 0"><b>Unlock Niche Finder</b><span>Get a plan to see all channels.</span><button class="x-btn x-btn--light" type="button" data-pricing>Get Access Now</button></div>' : "") : T.empty("No channels in this window yet.");
   }
   $("#hm-win").addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b) return; $$("#hm-win button").forEach(function (o) { o.setAttribute("aria-selected", o === b ? "true" : "false"); }); HMWIN = b.dataset.v; renderOutl(); });
   function renderNiches(d) {
@@ -230,10 +230,10 @@
     var rows = Object.keys(by).map(function (k) { var x = by[k]; return { k: k, n: x.n, avg: x.views / x.n, age: x.age / x.n, out: x.out }; }).sort(function (a, b) { return b.n - a.n; }).slice(0, 8);
     $("#hm-niches").innerHTML = rows.length ? rows.map(function (r) {
       return '<div class="x-nrow"><div><b>' + esc(r.k) + '</b><span>' + r.n + ' new channels</span></div><div><span>Avg views</span><b>' + fmt(r.avg) + '</b></div><div><span>Avg age</span><b>' + Math.round(r.age) + 'd</b></div><div><span>Top outlier</span><b>' + Math.round(r.out) + "×</b></div></div>";
-    }).join("") : T.empty("Collector ke run ke baad yahan niches aayenge.");
+    }).join("") : T.empty("Niches will appear here after the collector runs.");
   }
   document.addEventListener("tr:data", renderHome);
-  $("#hm-go").addEventListener("click", function () { var v = $("#hm-q").value.trim(); if (!v) { toast("Apne channel ka link ya @handle likhein.", true); return; } $("#mp-q").value = v; store.set("mychq", v); buildMapFor(v, true); });
+  $("#hm-go").addEventListener("click", function () { var v = $("#hm-q").value.trim(); if (!v) { toast("Enter your channel's link or @handle.", true); return; } $("#mp-q").value = v; store.set("mychq", v); buildMapFor(v, true); });
   $("#hm-q").addEventListener("keydown", function (e) { if (e.key === "Enter") $("#hm-go").click(); });
   function demoMini() {
     var g = "", cx = 260, cy = 190;
@@ -292,8 +292,8 @@
     if (T.needKey()) return;
     var depth = +$("#mp-depth").value || 1, btn = $("#mp-go");
     var est = depth === 1 ? 70 : 180;
-    if (!confirm("Map banane mein lagbhag " + est + " credits lagenge (depth " + depth + "). Continue?")) return;
-    T.busy(btn, true, "Mapping…"); T.go("map"); $("#map-title").textContent = "Mapping…"; $("#mp-sub").textContent = "YouTube par is channel ke topics search ho rahe hain. 20-60 second.";
+    if (!confirm("Building the map will cost about " + est + " credits (depth " + depth + "). Continue?")) return;
+    T.busy(btn, true, "Mapping…"); T.go("map"); $("#map-title").textContent = "Mapping…"; $("#mp-sub").textContent = "Searching YouTube for this channel's topics. 20-60 seconds.";
     var M = { center: null, nodes: {}, edges: {}, found: 0, depth: depth, at: new Date().toISOString() };
     function edge(a, b, w) { if (a === b) return; var k = [a, b].sort().join("|"); M.edges[k] = (M.edges[k] || 0) + w; }
     T.resolveChannel(input).then(function (ch) { return profileChannels([ch], 30); }).then(function (r) {
@@ -364,7 +364,7 @@
   function drawMap() {
     var svg = $("#x-net");
     if (!MAP) {
-      svg.innerHTML = '<text x="500" y="350" text-anchor="middle" font-size="18" fill="#646a7e" font-family="Inter, system-ui">Kisi bhi channel ka naam, link ya @handle likh kar “Map it” dabayein</text>';
+      svg.innerHTML = '<text x="500" y="350" text-anchor="middle" font-size="18" fill="#646a7e" font-family="Inter, system-ui">Type any channel\'s name, link or @handle and click "Map it"</text>';
       svg.setAttribute("viewBox", "0 0 1000 700"); return;
     }
     var ids = Object.keys(MAP.nodes), mx = Math.max.apply(0, ids.map(function (k) { return MAP.nodes[k].step ? MAP.nodes[k].views30 || 0 : 0; }).concat([1]));
@@ -408,7 +408,7 @@
     ideas.sort(function (a, b) { return b.best.out - a.best.out; });
     $("#x-ideas").innerHTML = ideas.length ? ideas.slice(0, 6).map(function (n) {
       return '<a class="x-link x-idea" href="' + T.ytv(n.best.id) + '" target="_blank" rel="noopener">✦<span>' + esc(n.best.title) + '<br><span class="x-meta">' + esc(n.title) + " · " + fmt(n.best.views) + " views · " + n.best.out + "×</span></span></a>";
-    }).join("") : '<p class="x-meta">Abhi koi breakout nahi mila.</p>';
+    }).join("") : '<p class="x-meta">No breakout found yet.</p>';
   }
   function drawMini() {
     var ids = Object.keys(MAP.nodes), g = "", c = MAP.nodes[MAP.center], sx = 520 / 1000, sy = 380 / 700;
@@ -466,7 +466,7 @@
     $("#pn-json").onclick = function () { strategyFor(n.id, this); };
     $("#pn-all").onclick = function () { T.openChannel(n.id); };
     $("#pn-save").onclick = function () { toggleSave(n); drawPanel(); };
-    $("#pn-learn").onclick = function () { addLearn({ id: n.id, title: n.title, thumb: n.thumb }); toast("Topics mein add ho gaya ✓"); };
+    $("#pn-learn").onclick = function () { addLearn({ id: n.id, title: n.title, thumb: n.thumb }); toast("Added to Topics ✓"); };
     $("#pn-tabs").onclick = function (e) { var b = e.target.closest("button"); if (b) { PTAB = b.dataset.v; drawPanel(); } };
     var so = $("#pn-sort"); if (so) so.onclick = function (e) { var b = e.target.closest("button"); if (b) { PSORT = b.dataset.v; drawPanel(); } };
     p.onclick = function (e) { var b = e.target.closest("[data-node]"); if (b) selectNode(b.dataset.node); var s = e.target.closest("[data-swipe]"); if (s) { addSwipe({ id: s.dataset.swipe, title: s.dataset.t, channel: s.dataset.ch, views: +s.dataset.views, out: +s.dataset.out }); s.textContent = "★"; } };
@@ -478,7 +478,7 @@
     $("#an-q").value = id;
     T.runAnalyze().then(function () { if (T.current() && T.current().ch.id === id) $("#an-json").click(); }).then(function () { T.busy(btn, false); }, function () { T.busy(btn, false); });
   }
-  $("#mp-go").addEventListener("click", function () { var v = $("#mp-q").value.trim(); if (!v) { toast("Channel ka naam, link ya @handle likhein.", true); return; } buildMapFor(v, false); });
+  $("#mp-go").addEventListener("click", function () { var v = $("#mp-q").value.trim(); if (!v) { toast("Enter a channel name, link or @handle.", true); return; } buildMapFor(v, false); });
   $("#mp-q").addEventListener("keydown", function (e) { if (e.key === "Enter") $("#mp-go").click(); });
   $("#mp-depth").addEventListener("input", function () { $("#mp-depthv").textContent = this.value; $("#mp-depthtext").textContent = this.value === "1" ? "One step out: the channels YouTube shows for the same topics as this channel. ~70 credits." : "Two steps out: also the channels next to its 4 closest competitors. ~180 credits."; });
   $("#mp-filt").addEventListener("click", function () { $("#mp-filters").hidden = !$("#mp-filters").hidden; });
@@ -488,27 +488,27 @@
   $("#mf-reset").addEventListener("click", function () { ["#mf-smin", "#mf-smax", "#mf-v30", "#mf-lmin", "#mf-lmax"].forEach(function (s) { $(s).value = ""; }); $("#mf-lang").value = ""; $("#mf-br").value = "3"; readMF(); });
   function readMF() { MF = { smin: +$("#mf-smin").value || 0, smax: +$("#mf-smax").value || 0, v30: +$("#mf-v30").value || 0, lmin: +$("#mf-lmin").value || 0, lmax: +$("#mf-lmax").value || 0, lang: $("#mf-lang").value, br: +$("#mf-br").value || 3, mode: (T.$('#mf-mode button[aria-pressed="true"]') || {}).dataset ? $('#mf-mode button[aria-pressed="true"]').dataset.v : "dim" }; drawMap(); }
   $("#mp-export").addEventListener("click", function () {
-    if (!MAP) { toast("Pehle map banayein.", true); return; }
+    if (!MAP) { toast("Build a map first.", true); return; }
     var out = { tool: SITE.site_name, generatedAt: MAP.at, center: MAP.nodes[MAP.center].title, depth: MAP.depth, channels: Object.keys(MAP.nodes).map(function (k) { var n = MAP.nodes[k]; return { name: n.title, link: T.ytc(n.id), stepsFromCenter: n.step, subscribers: n.subs, viewsLast30Days: n.views30, usualViews: n.median, averageLengthSec: n.avgLen, language: n.lang, breakout: n.breakout, videos: (n.videos || []).slice(0, 15).map(function (v) { return { title: v.title, url: T.ytv(v.id), views: v.views, date: v.at, lengthSec: v.dur, outlier: v.out }; }) }; }),
       links: Object.keys(MAP.edges).map(function (k) { var p = k.split("|"); return { a: (MAP.nodes[p[0]] || {}).title, b: (MAP.nodes[p[1]] || {}).title, strength: +MAP.edges[k].toFixed(2) }; }) };
     var txt = JSON.stringify(out, null, 2);
-    if (confirm("JSON download karein? (Cancel = clipboard par copy, ChatGPT/Claude mein paste karne ke liye)")) T.download("map-" + MAP.center + ".json", txt, "application/json");
+    if (confirm("Download the JSON? (Cancel = copy to clipboard, to paste into ChatGPT/Claude)")) T.download("map-" + MAP.center + ".json", txt, "application/json");
     else (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(function () { toast("Map copied ✓"); }, function () { T.download("map-" + MAP.center + ".json", txt, "application/json"); });
   });
   $("#mp-chatbtn").addEventListener("click", function () { openBot("map"); });
-  $("#an-map").addEventListener("click", function () { var v = $("#an-q").value.trim(); if (!v) { toast("Channel URL ya @handle paste karein.", true); return; } $("#mp-q").value = v; buildMapFor(v, false); });
+  $("#an-map").addEventListener("click", function () { var v = $("#an-q").value.trim(); if (!v) { toast("Paste a channel URL or @handle.", true); return; } $("#mp-q").value = v; buildMapFor(v, false); });
 
   /* ================= research chat (Map chat + general) ================= */
   var BOT = { mode: "general", hist: [] };
   var SUGG = {
     map: ["Which channels on my map are doing best lately?", "Which small channels are blowing up right now?", "What is the closest competitor uploading lately?", "Give me 5 video ideas from these breakouts"],
-    general: ["Aaj kaun se naye channels sab se tez grow kar rahe hain?", "Tier-1 mein kaun sa niche abhi khaali hai?", "Monetized new channels ki list do", "AVP list mein best 5 channels kaun se hain?"]
+    general: ["Which new channels are growing fastest today?", "Which niche is still open in Tier-1?", "Give me a list of monetized new channels", "Which are the best 5 channels in the AVP list?"]
   };
   function openBot(mode) {
     BOT.mode = mode || (T.$(".x-view:not([hidden])").id === "view-map" && MAP ? "map" : "general");
     $("#x-bot").hidden = false; $("#x-botfab").hidden = true;
     $("#bot-title").textContent = BOT.mode === "map" ? "Ask about your map" : "Ask " + SITE.site_name;
-    $("#bot-ctx").textContent = BOT.mode === "map" ? (MAP ? "Reads every channel and video on your map (" + (Object.keys(MAP.nodes).length) + " channels)." : "Pehle map banayein.") : "Reads the viral radar, AVP list and the channel you analysed.";
+    $("#bot-ctx").textContent = BOT.mode === "map" ? (MAP ? "Reads every channel and video on your map (" + (Object.keys(MAP.nodes).length) + " channels)." : "Build a map first.") : "Reads the viral radar, AVP list and the channel you analysed.";
     $("#bot-sugg").innerHTML = BOT.hist.length ? "" : SUGG[BOT.mode].map(function (s) { return '<button class="x-preset" type="button">' + esc(s) + "</button>"; }).join("");
     $("#bot-in").focus();
   }
@@ -523,7 +523,7 @@
     lookups(q).then(function (extra) {
       var ctx = context(); if (extra.length) ctx.lookedUp = extra;
       var prompt = "You are " + SITE.site_name + "'s YouTube research assistant (like Makina's Map chat). Answer the user's question using ONLY the JSON data below; never invent numbers. " +
-        "Reply in the same language and script the user writes in (Roman Urdu if they write Roman Urdu). Be concise: a short answer, then a ranked list when useful. " +
+        "Reply in English. Be concise: a short answer, then a ranked list when useful. " +
         "Whenever you mention a channel that is in the data, write it exactly as [[ch:CHANNEL_ID]] (the chip shows its name), followed by the key numbers. " +
         "Outlier/breakout = a video's views divided by the channel's usual (median) views. If the data cannot answer, say what is missing and suggest which page of the tool to use.\n\nDATA:\n" + JSON.stringify(ctx).slice(0, 90000) +
         "\n\nCONVERSATION SO FAR:\n" + BOT.hist.slice(-6).map(function (h) { return h.r + ": " + h.t; }).join("\n") + "\nuser: " + q;
@@ -571,20 +571,20 @@
   function addLearn(c) { var l = learnList(); if (!l.some(function (x) { return x.id === c.id; })) { l.push(c); store.set("learn", l.slice(0, 25)); } drawLearn(); }
   function drawLearn() {
     var l = learnList();
-    $("#tp-learn").innerHTML = l.length ? l.map(function (c, i) { return '<span class="x-kchip">' + esc(c.title) + '<button type="button" data-i="' + i + '" aria-label="Leave out ' + esc(c.title) + '">×</button></span>'; }).join("") : '<span class="x-meta">None yet: Find competitors dabayein, ya Map se channels "Learn from it" karein.</span>';
+    $("#tp-learn").innerHTML = l.length ? l.map(function (c, i) { return '<span class="x-kchip">' + esc(c.title) + '<button type="button" data-i="' + i + '" aria-label="Leave out ' + esc(c.title) + '">×</button></span>'; }).join("") : '<span class="x-meta">None yet: click Find competitors, or mark channels "Learn from it" on the Map.</span>';
   }
   $("#tp-learn").addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b) return; var l = learnList(); l.splice(+b.dataset.i, 1); store.set("learn", l); drawLearn(); });
   $("#tp-add").addEventListener("submit", function (e) { e.preventDefault(); var inp = $("input", this), v = inp.value.trim(); if (!v || T.needKey()) return; T.resolveChannel(v).then(function (c) { addLearn({ id: c.id, title: c.snippet.title, thumb: chThumb(c) }); inp.value = ""; }).catch(function (er) { toast(er.message, true); }); });
   $("#tp-find").addEventListener("click", function () {
-    var v = $("#tp-q").value.trim() || store.get("mychq", ""); if (!v) { toast("Apna channel likhein.", true); return; }
+    var v = $("#tp-q").value.trim() || store.get("mychq", ""); if (!v) { toast("Enter your channel.", true); return; }
     store.set("mychq", v);
     if (MAP && store.get("mych", {}) && MAP.center === (store.get("mych", {}) || {}).id) { pickFromMap(); return; }
-    toast("Pehle aapke channel ka map banega, phir competitors yahan aa jayenge.");
+    toast("First your channel's map will be built, then competitors will appear here.");
     buildMapFor(v, true);
     var iv = setInterval(function () { if (MAP && MAP.center === (store.get("mych", {}) || {}).id) { clearInterval(iv); pickFromMap(); T.go("topics"); } }, 2000);
     setTimeout(function () { clearInterval(iv); }, 180000);
   });
-  function pickFromMap() { Object.keys(MAP.nodes).filter(function (k) { return MAP.nodes[k].step === 1; }).sort(function (a, b) { return MAP.nodes[b].breakout - MAP.nodes[a].breakout; }).slice(0, 8).forEach(function (k) { var n = MAP.nodes[k]; addLearn({ id: n.id, title: n.title, thumb: n.thumb }); }); toast("Competitors add ho gaye ✓"); }
+  function pickFromMap() { Object.keys(MAP.nodes).filter(function (k) { return MAP.nodes[k].step === 1; }).sort(function (a, b) { return MAP.nodes[b].breakout - MAP.nodes[a].breakout; }).slice(0, 8).forEach(function (k) { var n = MAP.nodes[k]; addLearn({ id: n.id, title: n.title, thumb: n.thumb }); }); toast("Competitors added ✓"); }
   var TOP = { list: [], hist: [] };
   $("#tp-check").addEventListener("click", function () { this.setAttribute("aria-pressed", this.getAttribute("aria-pressed") !== "true"); });
   $("#tp-go").addEventListener("click", function () { genTopics(""); });
@@ -593,8 +593,8 @@
   function genTopics(follow) {
     if (T.needKey()) return;
     var mine = $("#tp-q").value.trim() || store.get("mychq", ""), learn = learnList();
-    if (!mine) { toast("Apna channel likhein.", true); return; }
-    if (!learn.length) { toast("Pehle kam az kam ek competitor add karein (Find competitors).", true); return; }
+    if (!mine) { toast("Enter your channel.", true); return; }
+    if (!learn.length) { toast("Add at least one competitor first (Find competitors).", true); return; }
     var btn = $("#tp-go"); T.busy(btn, true, "Studying…");
     $("#tp-title").textContent = SITE.site_name + " is studying your competitors…"; $("#tp-sub").textContent = "Learning from: " + learn.map(function (c) { return c.title; }).join(", ") + ". 30-90 second.";
     var nTop = Math.max(1, Math.min(20, +$("#tp-n").value || 8)), nTit = Math.max(1, Math.min(10, +$("#tp-t").value || 5));
@@ -633,21 +633,21 @@
 
   /* ================= SAVED & CHANNEL TRACKER ================= */
   function savedCh() { return store.get("saved", []); }
-  function toggleSave(n) { var l = savedCh(), i = l.findIndex(function (c) { return c.id === n.id; }); if (i >= 0) l.splice(i, 1); else l.push({ id: n.id, title: n.title, thumb: n.thumb, hist: [{ at: Date.now(), subs: n.subs, views: n.totalViews || 0 }] }); store.set("saved", l); drawSaved(); toast(i >= 0 ? "Removed" : "Saved ✓ (Tracker mein)"); }
+  function toggleSave(n) { var l = savedCh(), i = l.findIndex(function (c) { return c.id === n.id; }); if (i >= 0) l.splice(i, 1); else l.push({ id: n.id, title: n.title, thumb: n.thumb, hist: [{ at: Date.now(), subs: n.subs, views: n.totalViews || 0 }] }); store.set("saved", l); drawSaved(); toast(i >= 0 ? "Removed" : "Saved ✓ (in Tracker)"); }
   function swipes() { return store.get("swipe", []); }
-  function addSwipe(v) { var l = swipes(); if (!l.some(function (x) { return x.id === v.id; })) { l.unshift(Object.assign({ folder: "All", at: Date.now() }, v)); store.set("swipe", l.slice(0, 300)); } toast("Swipe File mein save ✓"); drawSaved(); }
+  function addSwipe(v) { var l = swipes(); if (!l.some(function (x) { return x.id === v.id; })) { l.unshift(Object.assign({ folder: "All", at: Date.now() }, v)); store.set("swipe", l.slice(0, 300)); } toast("Saved to Swipe File ✓"); drawSaved(); }
   function delta(h, key) { var now = h[h.length - 1], cut = Date.now() - 48 * 3600e3, old = null; for (var i = h.length - 1; i >= 0; i--) if (h[i].at <= cut) { old = h[i]; break; } if (!old) old = h[0]; return old === now ? null : now[key] - old[key]; }
   function drawSaved() {
     var l = savedCh();
     $("#sv-ch tbody").innerHTML = l.length ? l.map(function (c, i) {
       var h = c.hist || [], last = h[h.length - 1] || {}, dv = delta(h, "views"), ds = delta(h, "subs");
       return '<tr><td><button class="x-chlink x-tv" type="button" data-open-ch="' + esc(c.id) + '">' + img(c.thumb, c.title, 36) + "<div><b>" + esc(c.title) + '</b><span>tracked since ' + new Date((h[0] || {}).at || Date.now()).toLocaleDateString() + '</span></div></button></td><td class="x-n">' + fmt(last.subs) + '</td><td class="x-n">' + (dv == null ? '<span class="x-meta">next update</span>' : "+" + fmt(dv)) + '</td><td class="x-n">' + (ds == null ? "–" : (ds >= 0 ? "+" : "") + fmt(ds)) + '</td><td class="x-n">' + fmt(last.views) + '</td><td><button class="x-btn x-btn--ghost x-mini" type="button" data-unsave="' + i + '">Remove</button></td></tr>';
-    }).join("") : '<tr><td colspan="6">' + T.empty("Koi channel save nahi.", "Map ke channel panel mein ☆ Save dabayein.") + "</td></tr>";
+    }).join("") : '<tr><td colspan="6">' + T.empty("No channels saved.", "Click ☆ Save in a channel's panel on the Map.") + "</td></tr>";
     var sw = swipes(), folders = T.uniq(["All"].concat(sw.map(function (x) { return x.folder; })));
     var cur = $("#sv-folder").value || "All";
     $("#sv-folder").innerHTML = folders.map(function (f) { return "<option" + (f === cur ? " selected" : "") + ">" + esc(f) + "</option>"; }).join("");
     var vis = sw.filter(function (x) { return cur === "All" || x.folder === cur; });
-    $("#sv-vids").innerHTML = vis.length ? vis.map(function (v, i) { return '<div class="x-vcard"><a class="x-vthumb" href="' + T.ytv(v.id) + '" target="_blank" rel="noopener" style="background-image:url(\'https://i.ytimg.com/vi/' + esc(v.id) + '/mqdefault.jpg\')"></a><div class="x-vmeta">' + (v.out ? '<span class="x-xb">' + v.out + "×</span>" : "") + fmt(v.views) + " views</div><p>" + esc(v.title) + '</p><div class="x-vch">' + esc(v.channel || "") + '</div><div class="x-liverow"><button class="x-btn x-btn--ghost x-mini" type="button" data-tr="' + esc(v.id) + '">Transcript</button><button class="x-btn x-btn--ghost x-mini" type="button" data-rw="' + esc(v.id) + '">Rewrite</button><button class="x-btn x-btn--ghost x-mini" type="button" data-unswipe="' + esc(v.id) + '">Remove</button></div></div>'; }).join("") : '<div class="x-card" style="grid-column:1/-1">' + T.empty("Swipe File khaali hai.", "Map ke channel panel mein kisi video ke ☆ par click karein.") + "</div>";
+    $("#sv-vids").innerHTML = vis.length ? vis.map(function (v, i) { return '<div class="x-vcard"><a class="x-vthumb" href="' + T.ytv(v.id) + '" target="_blank" rel="noopener" style="background-image:url(\'https://i.ytimg.com/vi/' + esc(v.id) + '/mqdefault.jpg\')"></a><div class="x-vmeta">' + (v.out ? '<span class="x-xb">' + v.out + "×</span>" : "") + fmt(v.views) + " views</div><p>" + esc(v.title) + '</p><div class="x-vch">' + esc(v.channel || "") + '</div><div class="x-liverow"><button class="x-btn x-btn--ghost x-mini" type="button" data-tr="' + esc(v.id) + '">Transcript</button><button class="x-btn x-btn--ghost x-mini" type="button" data-rw="' + esc(v.id) + '">Rewrite</button><button class="x-btn x-btn--ghost x-mini" type="button" data-unswipe="' + esc(v.id) + '">Remove</button></div></div>'; }).join("") : '<div class="x-card" style="grid-column:1/-1">' + T.empty("Swipe File is empty.", "Click ☆ on a video in a channel's panel on the Map.") + "</div>";
   }
   $("#sv-folder").addEventListener("change", drawSaved);
   $("#view-saved").addEventListener("click", function (e) {
@@ -665,13 +665,13 @@
 
   /* ================= TOOLS ================= */
   function vidFrom(s) { var m = String(s).match(/(?:v=|youtu\.be\/|shorts\/|embed\/|live\/)([\w-]{11})/) || String(s).match(/^([\w-]{11})$/); return m ? m[1] : null; }
-  function toolVid() { var id = vidFrom($("#tl-q").value.trim()); if (!id) toast("Sahi YouTube video link paste karein.", true); return id; }
+  function toolVid() { var id = vidFrom($("#tl-q").value.trim()); if (!id) toast("Paste a valid YouTube video link.", true); return id; }
   $("#tl-tx").addEventListener("click", function () { var id = toolVid(); if (id) T.showTranscript(id); });
   $("#tl-rw").addEventListener("click", function () { var id = toolVid(); if (id) T.rewriteVideo(id); });
   $("#tl-an").addEventListener("click", function () {
     var id = toolVid(); if (!id || T.needKey()) return;
-    T.modal("Video analysis", "Hook, story arc, cliffhangers aur thumbnail analyse ho rahe hain…", "", "analysis-" + id + ".json");
-    T.gemini([T.videoPart(id), { text: T.ANALYSE }], true, "analyze").then(function (j) { T.modal("Video analysis", "Strategy ka khaka, original script ke liye.", JSON.stringify(j, null, 2), "analysis-" + id + ".json"); })
+    T.modal("Video analysis", "Analysing the hook, story arc, cliffhangers and thumbnail…", "", "analysis-" + id + ".json");
+    T.gemini([T.videoPart(id), { text: T.ANALYSE }], true, "analyze").then(function (j) { T.modal("Video analysis", "Strategy outline, for your original script.", JSON.stringify(j, null, 2), "analysis-" + id + ".json"); })
       .catch(function (er) { $("#x-msub").textContent = "Fail: " + er.message; });
   });
   $("#tl-q").addEventListener("input", function () {
