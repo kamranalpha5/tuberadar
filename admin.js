@@ -3,7 +3,7 @@
   "use strict";
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
-  var sb = BE.sb, PLANS = [], METHODS = [], SET = null, EDIT = null;
+  var sb = window.BE ? BE.sb : null, PLANS = [], METHODS = [], SET = null, EDIT = null;
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   var tt; function toast(m, err) { var t = $("#toast"); t.textContent = m; t.className = "toast on" + (err ? " err" : ""); clearTimeout(tt); tt = setTimeout(function () { t.className = "toast"; }, err ? 6000 : 2500); }
   function chk(r) { if (r && r.error) throw new Error(r.error.message); return r; }
@@ -11,7 +11,7 @@
   function day() { return new Date().toISOString().slice(0, 10); }
   function d(s) { return s ? new Date(s).toLocaleString() : "–"; }
 
-  if (!BE.ready) { document.body.innerHTML = '<div class="login card"><h1>Setup needed</h1><p>assets/config.js mein Supabase URL aur anon key daalein (README dekhein).</p></div>'; return; }
+  if (!window.BE || !BE.ready) { document.body.innerHTML = '<div class="login card"><h1>Setup needed</h1><p>assets/config.js mein Supabase URL aur anon key daalein (README dekhein).</p></div>'; return; }
 
   /* ---------- auth gate ---------- */
   var started = false;
