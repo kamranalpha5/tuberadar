@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TubeRadar · YouTube Viral Radar</title>
+    <meta name="description" content="Find new viral YouTube channels from the last 24 hours and map your competitors." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&family=Inter:wght@400;500;600;700&display=swap"
+    />
+    <link rel="stylesheet" href="assets/hark.css" />
+    <link rel="stylesheet" href="assets/hark-hero.css" />
+    <style>
+      body.x-body { background: #f7f8fa; color: #0f1222; }
+      .x-app {
+        --x-bg: #f7f8fa; --x-card: #ffffff; --x-ink: #0f1222; --x-ink2: #5d6278; --x-ink3: #646a7e; --x-acc-ink: #4141d4;
+        --x-line: #e7e9ef; --x-line2: #f0f1f5; --x-acc: #5b5bf6; --x-acc-soft: #eeeefe; --x-coral: #f25c54; --x-coral-soft: #feeceb;
+        --x-green: #15803d; --x-shadow: 0 1px 2px rgba(16,18,40,.04), 0 4px 16px rgba(16,18,40,.05);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        font-size: 14px; line-height: 1.45; color: var(--x-ink); background: var(--x-bg);
+        width: 100vw; margin-inline: calc(50% - 50vw); margin-block: -12px -40px;
+        display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: 100vh;
+      }
+      .x-app button, .x-app input, .x-app select { font: inherit; color: inherit; }
+      .x-side { position: sticky; top: 0; height: 100vh; background: #fff; border-right: 1px solid var(--x-line); padding: 20px 14px; display: flex; flex-direction: column; gap: 24px; }
+      .x-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; letter-spacing: -.02em; padding: 4px 8px; }
+      .x-logo svg { color: var(--x-acc); }
+      .x-navlist { display: grid; gap: 2px; }
+      .x-navbtn { display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 0 10px; border: 0; border-radius: 10px; background: none; color: var(--x-ink2); font-weight: 500; cursor: pointer; text-align: left; transition: background .15s, color .15s; }
+      .x-navbtn svg { width: 18px; height: 18px; flex: none; }
+      .x-navbtn:hover { background: var(--x-bg); color: var(--x-ink); }
+      .x-navbtn[aria-current="page"] { background: var(--x-acc-soft); color: var(--x-acc-ink); }
+      .x-quota { margin-top: auto; border: 1px solid var(--x-line); border-radius: 12px; padding: 14px; background: var(--x-bg); }
+      .x-quota p { font-size: 12px; color: var(--x-ink2); }
+      .x-quota strong { display: block; font-size: 14px; color: var(--x-ink); margin: 4px 0 10px; }
+      .x-bar { height: 6px; border-radius: 99px; background: var(--x-line); overflow: hidden; }
+      .x-bar > i { display: block; height: 100%; border-radius: inherit; background: var(--x-acc); }
+      .x-mainwrap { min-width: 0; display: flex; flex-direction: column; }
+      .x-top { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 16px; padding: 14px 32px; background: rgba(247,248,250,.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--x-line); }
+      .x-title { display: flex; align-items: center; gap: 10px; min-width: 0; }
+      .x-title h1 { font-size: 20px; font-weight: 600; letter-spacing: -.02em; white-space: nowrap; }
+      .x-sample { font-size: 12px; font-weight: 500; padding: 3px 9px; border-radius: 99px; background: #fff; border: 1px dashed var(--x-ink3); color: var(--x-ink2); white-space: nowrap; }
+      .x-search { flex: 1; max-width: 420px; margin-left: auto; position: relative; }
+      .x-search svg { position: absolute; left: 12px; top: 50%; translate: 0 -50%; width: 16px; color: var(--x-ink3); }
+      .x-input { width: 100%; min-height: 40px; border: 1px solid var(--x-line); border-radius: 10px; background: #fff; padding: 0 12px; outline: none; transition: border-color .15s, box-shadow .15s; }
+      .x-search .x-input { padding-left: 36px; }
+      .x-input:focus { border-color: var(--x-acc); box-shadow: 0 0 0 3px var(--x-acc-soft); }
+      .x-updated { font-size: 12px; color: var(--x-ink3); white-space: nowrap; }
+      .x-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid var(--x-acc); background: var(--x-acc); color: #fff !important; font-weight: 600; cursor: pointer; white-space: nowrap; box-shadow: 0 1px 2px rgba(91,91,246,.3); transition: filter .15s; }
+      .x-btn:hover { filter: brightness(1.08); }
+      .x-btn svg { width: 16px; }
+      .x-btn--ghost { background: #fff; color: var(--x-ink) !important; border-color: var(--x-line); box-shadow: none; }
+      .x-view { padding: 28px 32px 48px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
+      .x-view > * { min-width: 0; }
+      .x-av { background-color: #4f46e5; }
+      .x-view[hidden] { display: none; }
+      .x-card { background: var(--x-card); border: 1px solid var(--x-line); border-radius: 14px; box-shadow: var(--x-shadow); }
+      .x-pad { padding: 20px; }
+      .x-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+      .x-stat { padding: 18px 20px; display: grid; gap: 6px; }
+      .x-stat p { font-size: 13px; color: var(--x-ink2); }
+      .x-stat .x-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+      .x-stat strong { font-size: 28px; font-weight: 600; letter-spacing: -.03em; line-height: 1.1; }
+      .x-stat svg { width: 88px; height: 32px; color: var(--x-acc); }
+      .x-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 12px 16px; }
+      .x-fgroup { display: flex; align-items: center; gap: 6px; }
+      .x-flabel { font-size: 12px; color: var(--x-ink3); font-weight: 500; margin-right: 2px; }
+      .x-seg { display: inline-flex; padding: 3px; background: var(--x-bg); border: 1px solid var(--x-line); border-radius: 10px; }
+      .x-seg button { border: 0; background: none; min-height: 32px; padding: 0 12px; border-radius: 7px; font-size: 13px; font-weight: 500; color: var(--x-ink2); cursor: pointer; }
+      .x-seg button[aria-pressed="true"] { background: #fff; color: var(--x-ink); box-shadow: 0 1px 3px rgba(16,18,40,.1); }
+      .x-select { min-height: 38px; border: 1px solid var(--x-line); border-radius: 10px; background: #fff; padding: 0 10px; font-size: 13px; font-weight: 500; cursor: pointer; }
+      .x-toggle { display: inline-flex; align-items: center; gap: 8px; border: 0; background: none; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--x-ink2); min-height: 38px; }
+      .x-toggle i { width: 34px; height: 20px; border-radius: 99px; background: var(--x-line); position: relative; transition: background .2s; }
+      .x-toggle i::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.2); transition: translate .2s; }
+      .x-toggle[aria-pressed="true"] i { background: var(--x-acc); }
+      .x-toggle[aria-pressed="true"] i::after { translate: 14px 0; }
+      .x-sechead { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+      .x-sechead h2 { font-size: 16px; font-weight: 600; letter-spacing: -.01em; }
+      .x-sechead p { font-size: 13px; color: var(--x-ink3); }
+      .x-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+      .x-ch { padding: 18px; display: grid; gap: 14px; transition: box-shadow .2s, translate .2s; }
+      .x-ch:hover { translate: 0 -2px; box-shadow: 0 2px 4px rgba(16,18,40,.04), 0 12px 28px rgba(16,18,40,.08); }
+      .x-chhead { display: flex; align-items: center; gap: 12px; }
+      .x-av { width: 42px; height: 42px; border-radius: 50%; flex: none; display: grid; place-items: center; color: #fff; font-weight: 600; font-size: 14px; }
+      .x-chname { min-width: 0; flex: 1; }
+      .x-chname h3 { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .x-meta { font-size: 12px; color: var(--x-ink3); }
+      .x-ring { flex: none; position: relative; width: 46px; height: 46px; }
+      .x-ring svg { width: 46px; height: 46px; rotate: -90deg; }
+      .x-ring b { position: absolute; inset: 0; display: grid; place-items: center; font-size: 13px; font-weight: 600; }
+      .x-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+      .x-tag { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 500; padding: 2px 8px; border-radius: 6px; background: var(--x-bg); border: 1px solid var(--x-line); color: var(--x-ink2); white-space: nowrap; }
+      .x-tag--viral { background: var(--x-coral-soft); border-color: transparent; color: #c8322b; font-weight: 600; }
+      .x-tag--new { background: var(--x-acc-soft); border-color: transparent; color: var(--x-acc-ink); font-weight: 600; letter-spacing: .03em; }
+      .x-vid { border-top: 1px solid var(--x-line2); padding-top: 12px; display: grid; gap: 6px; }
+      .x-vid p:first-child { font-weight: 500; }
+      .x-nums { display: flex; gap: 16px; font-size: 12px; color: var(--x-ink2); }
+      .x-nums b { color: var(--x-ink); font-weight: 600; }
+      .x-tablewrap { overflow-x: auto; }
+      .x-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+      .x-table th { text-align: left; font-size: 12px; font-weight: 500; color: var(--x-ink3); padding: 0; border-bottom: 1px solid var(--x-line); white-space: nowrap; }
+      .x-table th button { display: inline-flex; align-items: center; gap: 4px; border: 0; background: none; padding: 12px 16px; min-height: 44px; color: inherit; font: inherit; cursor: pointer; }
+      .x-table th button:hover, .x-table th[aria-sort] button { color: var(--x-ink); }
+      .x-table th button svg { width: 12px; opacity: .5; }
+      .x-table td { padding: 12px 16px; border-bottom: 1px solid var(--x-line2); white-space: nowrap; }
+      .x-table tr:last-child td { border-bottom: 0; }
+      .x-table tbody tr { transition: background .15s; }
+      .x-table tbody tr:hover { background: #fafbfc; }
+      .x-table .x-n { font-variant-numeric: tabular-nums; font-weight: 500; }
+      .x-tv { display: flex; align-items: center; gap: 12px; min-width: 300px; white-space: normal; }
+      .x-thumb { width: 80px; aspect-ratio: 16/9; border-radius: 6px; flex: none; position: relative; }
+      .x-thumb::after { content: ""; position: absolute; inset: 0; margin: auto; width: 0; height: 0; border-left: 9px solid rgba(255,255,255,.9); border-block: 6px solid transparent; }
+      .x-tv b { display: block; font-weight: 500; }
+      .x-tv span { font-size: 12px; color: var(--x-ink3); }
+      .x-livebox { padding: 28px; display: grid; gap: 14px; }
+      .x-liverow { display: flex; gap: 10px; flex-wrap: wrap; }
+      .x-liverow .x-input { flex: 1; min-width: 220px; min-height: 48px; font-size: 16px; }
+      .x-liverow .x-btn { min-height: 48px; }
+      .x-note { font-size: 12px; color: var(--x-ink3); display: flex; align-items: center; gap: 6px; }
+      .x-list { display: grid; }
+      .x-li { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(120px, 240px) auto; align-items: center; gap: 16px; padding: 14px 20px; border-top: 1px solid var(--x-line2); }
+      .x-li:first-child { border-top: 0; }
+      .x-vph { display: grid; gap: 4px; font-size: 12px; color: var(--x-ink2); }
+      .x-vph .x-bar { height: 8px; }
+      .x-profile { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+      .x-profile .x-av { width: 60px; height: 60px; font-size: 20px; }
+      .x-profile h2 { font-size: 20px; font-weight: 600; letter-spacing: -.02em; }
+      .x-kv { display: flex; gap: 28px; flex-wrap: wrap; margin-left: auto; }
+      .x-kv div { display: grid; }
+      .x-kv span { font-size: 12px; color: var(--x-ink3); }
+      .x-kv b { font-size: 18px; font-weight: 600; letter-spacing: -.02em; }
+      .x-chart svg { width: 100%; height: auto; display: block; }
+      .x-legend { display: flex; gap: 16px; font-size: 12px; color: var(--x-ink2); }
+      .x-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+      .x-mult { font-size: 15px; font-weight: 700; color: var(--x-coral); font-variant-numeric: tabular-nums; }
+      .x-mapgrid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; align-items: start; }
+      .x-net { width: 100%; height: auto; display: block; }
+      .x-node { cursor: pointer; transition: opacity .2s; }
+      .x-node circle.x-dot { transition: r .2s, stroke-width .2s; }
+      .x-node:hover circle.x-dot { stroke-width: 4; }
+      .x-net:has(.x-node:hover) .x-node:not(:hover), .x-net:has(.x-node:hover) .x-edge { opacity: .35; }
+      .x-edge { transition: opacity .2s; }
+      .x-node text { font-size: 12px; font-weight: 500; fill: var(--x-ink); paint-order: stroke; stroke: #fff; stroke-width: 4px; stroke-linejoin: round; }
+      .x-node text.x-sm { fill: var(--x-ink3); font-weight: 400; }
+      .x-rank { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--x-line2); font-size: 13px; }
+      .x-rank:first-of-type { border-top: 0; }
+      .x-rank > span:first-child { color: var(--x-ink3); font-variant-numeric: tabular-nums; }
+      .x-rank b { font-weight: 500; }
+      .x-close { font-variant-numeric: tabular-nums; font-weight: 600; }
+      .x-ideas { display: grid; gap: 10px; }
+      .x-idea { display: flex; gap: 10px; padding: 12px; border-radius: 10px; background: var(--x-bg); font-weight: 500; font-size: 13px; }
+      .x-idea svg { width: 16px; flex: none; color: var(--x-acc); margin-top: 1px; }
+      .x-settings { display: grid; gap: 16px; max-width: 720px; }
+      .x-settings h2 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+      .x-settings .x-help { font-size: 13px; color: var(--x-ink2); margin-bottom: 14px; }
+      .x-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+      .x-kchip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 6px 5px 12px; border-radius: 99px; background: var(--x-acc-soft); color: var(--x-acc-ink); font-size: 13px; font-weight: 500; }
+      .x-kchip button { width: 44px; height: 44px; margin: -11px -8px -11px -10px; border: 0; border-radius: 50%; background: none; color: inherit; cursor: pointer; display: grid; place-items: center; }
+      .x-kchip button:hover { background: rgba(91,91,246,.15); }
+      .x-sched { display: flex; align-items: center; gap: 14px; }
+      .x-ico { width: 40px; height: 40px; border-radius: 10px; background: var(--x-acc-soft); color: var(--x-acc); display: grid; place-items: center; flex: none; }
+      .x-ico svg { width: 20px; }
+      .x-ok { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--x-green); display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+      .x-ok::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 3px #dcfce7; }
+      @media (max-width: 1180px) { .x-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .x-mapgrid { grid-template-columns: minmax(0, 1fr); } .x-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+      @media (max-width: 860px) {
+        .x-app { grid-template-columns: minmax(0, 1fr); }
+        .x-side { position: sticky; top: 0; z-index: 6; height: auto; flex-direction: row; align-items: center; gap: 8px; padding: 8px 12px; border-right: 0; border-bottom: 1px solid var(--x-line); overflow-x: auto; }
+        .x-logo span { display: none; }
+        .x-navlist { display: flex; gap: 2px; }
+        .x-navbtn { white-space: nowrap; min-height: 44px; }
+        .x-quota { display: none; }
+        .x-top { position: static; flex-wrap: wrap; padding: 14px 16px; gap: 10px; }
+        .x-search { order: 3; flex-basis: 100%; max-width: none; margin: 0; }
+        .x-updated { margin-left: auto; }
+        .x-view { padding: 20px 16px 40px; gap: 20px; }
+        .x-li { grid-template-columns: auto minmax(0, 1fr); }
+        .x-li .x-vph, .x-li > .x-tag { grid-column: 2; }
+      }
+      @media (max-width: 560px) { .x-grid, .x-stats { grid-template-columns: minmax(0, 1fr); } .x-updated { display: none; } .x-top .x-btn { margin-left: auto; } }
+      .x-empty { padding: 28px; text-align: center; color: var(--x-ink2); }
+      .x-empty b { display: block; color: var(--x-ink); font-size: 15px; margin-bottom: 4px; }
+      .x-toast { position: fixed; right: 20px; bottom: 20px; z-index: 50; background: #0f1222; color: #fff; padding: 12px 16px; border-radius: 12px; font-size: 13px; box-shadow: 0 8px 30px rgba(0,0,0,.18); max-width: 360px; opacity: 0; translate: 0 8px; transition: .2s; pointer-events: none; }
+      .x-toast.on { opacity: 1; translate: 0 0; }
+      .x-toast.err { background: #b42318; }
+      .x-btn[disabled] { opacity: .6; cursor: progress; }
+      .x-thumb { background-size: cover !important; background-position: center !important; }
+      .x-app a.x-link { color: inherit; text-decoration: none; }
+      .x-app a.x-link:hover b, .x-app a.x-link:hover h3 { color: var(--x-acc-ink); }
+      .x-sample.live { border-style: solid; border-color: #bbf7d0; background: #f0fdf4; color: #15803d; }
+    </style>
+  </head>
+  <body class="x-body">
+    <div class="page" id="top">
+      <div class="x-app">
+        <aside class="x-side">
+          <div class="x-logo">
+            <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true"><circle cx="13" cy="13" r="11.5" stroke="currentColor" stroke-width="1.6" opacity=".35"/><circle cx="13" cy="13" r="7" stroke="currentColor" stroke-width="1.6" opacity=".6"/><circle cx="13" cy="13" r="2.4" fill="currentColor"/><path d="M13 13 L21.5 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="18.5" cy="16.5" r="1.6" fill="#f25c54"/></svg>
+            <span>TubeRadar</span>
+          </div>
+          <nav class="x-navlist" aria-label="Views">
+            <button class="x-navbtn" data-view="radar" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 12l6-6"/></svg>Viral Radar</button>
+            <button class="x-navbtn" data-view="live"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Live Search</button>
+            <button class="x-navbtn" data-view="analyzer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Channel Analyzer</button>
+            <button class="x-navbtn" data-view="map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><circle cx="4.5" cy="5.5" r="2"/><circle cx="19.5" cy="5.5" r="2"/><circle cx="18" cy="19" r="2"/><path d="M9.8 10 6 7M14.2 10 18 7M14 14.5l2.7 3"/></svg>Competitor Map</button>
+            <button class="x-navbtn" data-view="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Settings</button>
+          </nav>
+          <div class="x-quota">
+            <p>API quota today (this browser)</p>
+            <strong id="x-quota-text">0 / 10,000 units</strong>
+            <div class="x-bar" role="progressbar" id="x-quota-bar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="API quota used"><i style="width: 0%"></i></div>
+          </div>
+        </aside>
+
+        <div class="x-mainwrap">
+          <header class="x-top">
+            <div class="x-title"><h1 id="x-viewtitle">Viral Radar</h1><span class="x-sample" id="x-status">Loading…</span></div>
+            <label class="x-search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+              <input class="x-input" id="top-q" type="search" placeholder="Search niche or paste channel URL…" aria-label="Search niche or paste channel URL" />
+            </label>
+            <span class="x-updated" id="x-updated">—</span>
+            <button class="x-btn" id="x-refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 4v5h-5"/></svg>Refresh</button>
+          </header>
+
+          <main>
+            <!-- VIEW 1 -->
+            <section class="x-view" id="view-radar" data-title="Viral Radar">
+              <div class="x-stats" id="x-stats"></div>
+              <div class="x-card x-filters">
+                <div class="x-fgroup"><span class="x-flabel">Window</span><div class="x-seg" data-seg id="f-window"><button data-v="24" aria-pressed="true">24h</button><button data-v="48" aria-pressed="false">48h</button><button data-v="168" aria-pressed="false">7d</button></div></div>
+                <div class="x-fgroup"><span class="x-flabel">Format</span><div class="x-seg" data-seg id="f-format"><button data-v="all" aria-pressed="true">All</button><button data-v="long" aria-pressed="false">Long</button><button data-v="short" aria-pressed="false">Shorts</button></div></div>
+                <label class="x-fgroup"><span class="x-flabel">Max subscribers</span><select class="x-select" id="f-subs"><option value="10000">10K</option><option value="50000">50K</option><option value="100000" selected>100K</option><option value="500000">500K</option><option value="1e12">Any</option></select></label>
+                <label class="x-fgroup"><span class="x-flabel">Min outlier</span><select class="x-select" id="f-out"><option value="0">Any</option><option value="2">2x</option><option value="3" selected>3x</option><option value="5">5x</option><option value="10">10x</option></select></label>
+                <button class="x-toggle" id="x-newonly" aria-pressed="false"><i></i>New channels only</button>
+                <button class="x-btn x-btn--ghost" id="x-scan" title="Runs the collector in your browser with your API key">Scan now</button>
+              </div>
+              <div>
+                <div class="x-sechead"><h2>Breakout channels</h2><p id="x-chcount">—</p></div>
+                <div class="x-grid" id="x-channels"></div>
+              </div>
+              <div>
+                <div class="x-sechead"><h2 id="x-trendtitle">Trending videos</h2><p>Click a column to sort</p></div>
+                <div class="x-card x-tablewrap">
+                  <table class="x-table" id="x-trend">
+                    <thead><tr>
+                      <th scope="col"><button data-k="title">Video</button></th>
+                      <th scope="col"><button data-k="niche">Niche</button></th>
+                      <th scope="col"><button data-k="views">Views</button></th>
+                      <th scope="col" aria-sort="descending"><button data-k="vph">Views/hour</button></th>
+                      <th scope="col"><button data-k="out">Outlier</button></th>
+                      <th scope="col"><button data-k="subs">Subs</button></th>
+                      <th scope="col"><button data-k="hrs">Published</button></th>
+                    </tr></thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+
+            <!-- VIEW 2 -->
+            <section class="x-view" id="view-live" data-title="Live Search" hidden>
+              <div class="x-card x-livebox">
+                <div class="x-liverow">
+                  <input class="x-input" id="live-q" type="search" placeholder="Enter a niche keyword (e.g. stoicism)" aria-label="Niche keyword" />
+                  <div class="x-seg" data-seg id="live-win"><button data-v="24" aria-pressed="true">24h</button><button data-v="48" aria-pressed="false">48h</button><button data-v="168" aria-pressed="false">7d</button></div>
+                  <button class="x-btn" id="live-go">Search YouTube</button>
+                </div>
+                <p class="x-note"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Costs ~105 quota units per search</p>
+              </div>
+              <div>
+                <div class="x-sechead"><h2 id="live-title">Search a niche to see what is breaking out</h2><p id="live-sub">Sorted by views/hour</p></div>
+                <div class="x-card x-list" id="x-live"></div>
+              </div>
+            </section>
+
+            <!-- VIEW 3 -->
+            <section class="x-view" id="view-analyzer" data-title="Channel Analyzer" hidden>
+              <div class="x-card x-livebox">
+                <div class="x-liverow">
+                  <input class="x-input" id="an-q" type="text" placeholder="Paste a channel URL or @handle" aria-label="Channel URL or handle" />
+                  <button class="x-btn" id="an-go">Analyze</button>
+                  <button class="x-btn x-btn--ghost" id="an-map">Build competitor map</button>
+                </div>
+              </div>
+              <div class="x-card x-pad x-profile" id="an-profile" hidden>
+                <div class="x-av" style="background: #4f46e5; background-image: linear-gradient(135deg, #4f46e5, #7c5cf0)">HR</div>
+                <div><h2>History Rebels</h2><p class="x-meta">@historyrebels · joined 2021</p></div>
+                <div class="x-kv">
+                  <div><span>Subscribers</span><b>41K</b></div>
+                  <div><span>Videos</span><b>212</b></div>
+                  <div><span>Joined</span><b>2021</b></div>
+                  <div><span>Median views</span><b>18.4K</b></div>
+                </div>
+              </div>
+              <div class="x-card x-pad x-chart" id="an-chart" hidden>
+                <div class="x-sechead"><h2 id="an-charttitle">Views on the last 15 videos</h2>
+                  <div class="x-legend"><span><i style="background:#5b5bf6"></i>Video</span><span><i style="background:#f25c54"></i>Outlier (3x+)</span><span><i style="background:none;border-top:2px dashed #8a8fa3;border-radius:0;height:0"></i><span id="an-medlegend">Median</span></span></div>
+                </div>
+                <div id="x-bars"></div>
+              </div>
+              <div>
+                <div class="x-sechead"><h2>Top outliers</h2><p id="an-outsub">Analyze a channel first</p></div>
+                <div class="x-card x-list" id="x-outliers"></div>
+              </div>
+            </section>
+
+            <!-- VIEW 4 -->
+            <section class="x-view" id="view-map" data-title="Competitor Map" hidden>
+              <div class="x-mapgrid">
+                <div class="x-card x-pad">
+                  <div class="x-sechead"><h2 id="map-title">Analyze a channel, then build its map</h2>
+                    <div class="x-legend"><span><i style="background:#5b5bf6;border-radius:50%"></i>Your channel</span><span><i style="background:#fff;border:2px solid #f25c54;border-radius:50%"></i>Recent breakout</span><span>Size = subscribers · thicker line = closer</span></div>
+                  </div>
+                  <svg class="x-net" id="x-net" viewBox="0 0 860 600" role="img" aria-label="Competitor network"></svg>
+                </div>
+                <div style="display:grid;gap:16px">
+                  <div class="x-card x-pad">
+                    <div class="x-sechead"><h2>Closest competitors</h2><p>Closeness</p></div>
+                    <div id="x-ranks"></div>
+                  </div>
+                  <div class="x-card x-pad">
+                    <div class="x-sechead"><h2>Breakout titles to learn from</h2><p>From competitors</p></div>
+                    <div class="x-ideas" id="x-ideas">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- VIEW 5 -->
+            <section class="x-view" id="view-settings" data-title="Settings" hidden>
+              <div class="x-settings">
+                <div class="x-card x-pad">
+                  <h2>YouTube Data API key</h2>
+                  <p class="x-help">Your key stays in your browser. Get one free from Google Cloud Console → YouTube Data API v3.</p>
+                  <div class="x-liverow"><input class="x-input" id="set-key" type="password" placeholder="AIza…" aria-label="API key" autocomplete="off" /><button class="x-btn" id="x-save">Save</button><button class="x-btn x-btn--ghost" id="x-clearkey">Clear</button></div>
+                </div>
+                <div class="x-card x-pad">
+                  <h2>Tracked niches</h2>
+                  <p class="x-help">"Scan now" uses these keywords. For the 6-hourly GitHub collector, paste them into config/keywords.json.</p>
+                  <div class="x-chips" id="x-niches"></div>
+                  <form class="x-liverow" id="x-addniche"><input class="x-input" type="text" placeholder="Add a niche keyword" aria-label="Add a niche keyword" /><button class="x-btn x-btn--ghost" type="submit">Add</button></form>
+                  <div class="x-liverow"><button class="x-btn x-btn--ghost" id="x-copycfg" type="button">Copy as keywords.json</button></div>
+                </div>
+                <div class="x-card x-pad x-sched">
+                  <span class="x-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+                  <div><h2>Collector schedule</h2><p class="x-meta" id="x-schedtext">Every 6 hours via GitHub Actions (free)</p></div>
+                  <span class="x-ok" id="x-schedok">Active</span>
+                </div>
+              </div>
+            </section>
+          </main>
+        </div>
+      </div>
+    </div>
+    <div class="x-toast" id="x-toast" role="status" aria-live="polite"></div>
+    <script src="assets/hark.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
