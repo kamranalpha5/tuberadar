@@ -1,0 +1,29 @@
+{
+  "windowHours": 48,
+  "regionCode": "",
+  "minViews": 5000,
+  "minOutlier": 3,
+  "newChannelMaxAgeDays": 180,
+  "smallChannelMaxSubs": 100000,
+  "maxVideos": 300,
+  "keywords": [
+    "ai tools",
+    "make money online",
+    "true crime",
+    "history documentary",
+    "stoicism",
+    "personal finance",
+    "motivation",
+    "minecraft",
+    "horror stories",
+    "tech review",
+    "cooking recipe",
+    "football highlights",
+    "islamic stories",
+    "pakistan news",
+    "facts you didn't know",
+    "space documentary",
+    "gaming shorts",
+    "luxury lifestyle"
+  ]
+}
