@@ -83,3 +83,44 @@ export class YouTube {
     return r.items.map((i) => i.contentDetails.videoId);
   }
 }
+
+// Channel profile from its latest uploads (2-4 quota units):
+// baseline median, last-N-days AVP, and an *estimate* of YouTube Partner Program eligibility.
+export async function profileChannel(yt, c, cfg, now = Date.now(), pages = 2) {
+  const pl = c.contentDetails?.relatedPlaylists?.uploads;
+  if (!pl) return null;
+  const ids = [];
+  let token;
+  for (let i = 0; i < pages; i++) {
+    const r = await yt.get('playlistItems', { part: 'contentDetails', playlistId: pl, maxResults: 50, pageToken: token });
+    ids.push(...r.items.map((x) => x.contentDetails.videoId));
+    token = r.nextPageToken;
+    if (!token) break;
+  }
+  const vids = (await yt.videos(ids)).sort((a, b) => new Date(b.snippet.publishedAt) - new Date(a.snippet.publishedAt));
+  const list = vids.map((v) => ({
+    views: Number(v.statistics.viewCount || 0),
+    dur: parseDuration(v.contentDetails?.duration),
+    days: (now - new Date(v.snippet.publishedAt).getTime()) / 864e5,
+  }));
+  const m = cfg.monetization;
+  const subs = Number(c.statistics?.subscriberCount || 0);
+  const longViewsSecs = list.filter((x) => x.dur > 180 && x.days <= 365).reduce((s, x) => s + x.views * x.dur, 0);
+  const watchHours = Math.round((longViewsSecs * m.assumedRetention) / 3600);
+  const shortsViews90d = list.filter((x) => x.dur > 0 && x.dur <= 180 && x.days <= 90).reduce((s, x) => s + x.views, 0);
+  const last = list.filter((x) => x.days <= cfg.avp.days);
+  const avp = last.length ? Math.round(last.reduce((s, x) => s + x.views, 0) / last.length) : 0;
+  return {
+    median: median(list.slice(0, 15).map((x) => x.views)),
+    uploadsChecked: list.length,
+    partial: !!token, // channel has more uploads than we checked -> totals are a lower bound
+    avp30: avp,
+    videos30: last.length,
+    monet: {
+      eligible: subs >= m.minSubs && (watchHours >= m.minWatchHours || shortsViews90d >= m.minShortsViews90d),
+      path: watchHours >= m.minWatchHours ? 'long' : shortsViews90d >= m.minShortsViews90d ? 'shorts' : null,
+      watchHours,
+      shortsViews90d,
+    },
+  };
+}
