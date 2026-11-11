@@ -2,7 +2,7 @@ name: Collect trending data
 
 on:
   schedule:
-    - cron: '0 */6 * * *'   # every 6 hours (UTC)
+    - cron: '0 */8 * * *'   # every 8 hours (UTC); the 30-day AVP list refreshes once a day
   workflow_dispatch:        # "Run workflow" button for a manual run
 
 permissions:
@@ -18,7 +18,9 @@ jobs:
           node-version: '20'
       - name: Run collector
         env:
-          YT_API_KEY: ${{ secrets.YT_API_KEY }}
+          YT_API_KEY: ${{ secrets.YT_API_KEY }}            # optional if the key is saved in the Admin panel
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: node scripts/collect.mjs
       - name: Commit data
         run: |
