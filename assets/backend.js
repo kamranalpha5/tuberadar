@@ -3,10 +3,10 @@
   var C = window.TR_CONFIG || {};
   var ready = C.SUPABASE_URL && !/YOUR-PROJECT/.test(C.SUPABASE_URL) && window.supabase;
   var sb = ready ? window.supabase.createClient(C.SUPABASE_URL, C.SUPABASE_ANON_KEY) : null;
-  var session = null, listeners = [];
+  var session = null, listeners = [], sessionKnown = false;
   if (sb) {
-    sb.auth.getSession().then(function (r) { session = r.data.session; fire(); });
-    sb.auth.onAuthStateChange(function (_e, s) { session = s; fire(); });
+    sb.auth.getSession().then(function (r) { session = r.data.session; sessionKnown = true; fire(); }, function () { sessionKnown = true; fire(); });
+    sb.auth.onAuthStateChange(function (_e, s) { session = s; sessionKnown = true; fire(); });
   }
   function fire() { listeners.forEach(function (f) { try { f(session); } catch (e) { console.error(e); } }); }
   function call(action, payload) {
@@ -24,7 +24,7 @@
     ready: !!sb, sb: sb, call: call,
     session: function () { return session; },
     user: function () { return session && session.user; },
-    onAuth: function (f) { listeners.push(f); if (!sb) setTimeout(function () { f(null); }, 0); },
+    onAuth: function (f) { listeners.push(f); if (!sb) setTimeout(function () { f(null); }, 0); else if (sessionKnown) setTimeout(function () { f(session); }, 0); },
     signIn: function (email, pw) { return sb.auth.signInWithPassword({ email: email, password: pw }).then(chk); },
     signUp: function (email, pw, name) { return sb.auth.signUp({ email: email, password: pw, options: { data: { full_name: name || "" }, emailRedirectTo: location.origin + location.pathname } }).then(chk); },
     google: function () { return sb.auth.signInWithOAuth({ provider: "google", options: { redirectTo: location.origin + location.pathname } }).then(chk); },
