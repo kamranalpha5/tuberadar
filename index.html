@@ -94,6 +94,15 @@
       .x-tags { display: flex; flex-wrap: wrap; gap: 6px; }
       .x-tag { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 500; padding: 2px 8px; border-radius: 6px; background: var(--x-bg); border: 1px solid var(--x-line); color: var(--x-ink2); white-space: nowrap; }
       .x-tag--viral { background: var(--x-coral-soft); border-color: transparent; color: #c8322b; font-weight: 600; }
+      .x-tag--money { background: #e7f6ee; border-color: transparent; color: #0f6b3c; font-weight: 600; }
+      .x-tag--warn { background: #fff4e0; border-color: transparent; color: #8a5300; font-weight: 600; }
+      .x-modal { position: fixed; inset: 0; background: rgba(20,22,35,.45); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 60; }
+      .x-modal[hidden] { display: none; }
+      .x-modalbox { width: min(820px, 100%); max-height: 90vh; display: flex; flex-direction: column; gap: 10px; padding: 20px; }
+      .x-mtext { width: 100%; min-height: 50vh; resize: vertical; font: 14px/1.6 Inter, system-ui, sans-serif; white-space: pre-wrap; }
+      .x-mini { font-size: 12px; padding: 4px 9px; min-height: 0; }
+      .x-chlink { background: none; border: 0; padding: 0; font: inherit; color: inherit; cursor: pointer; text-align: left; }
+      .x-chlink:hover h3, .x-chlink:hover b { color: var(--x-acc-ink); text-decoration: underline; }
       .x-tag--new { background: var(--x-acc-soft); border-color: transparent; color: var(--x-acc-ink); font-weight: 600; letter-spacing: .03em; }
       .x-vid { border-top: 1px solid var(--x-line2); padding-top: 12px; display: grid; gap: 6px; }
       .x-vid p:first-child { font-weight: 500; }
@@ -191,6 +200,138 @@
       .x-app a.x-link { color: inherit; text-decoration: none; }
       .x-app a.x-link:hover b, .x-app a.x-link:hover h3 { color: var(--x-acc-ink); }
       .x-sample.live { border-style: solid; border-color: #bbf7d0; background: #f0fdf4; color: #15803d; }
+      .x-navgroup { margin: 12px 10px 4px; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--x-ink3); }
+      .x-presets { margin: -4px 0 4px; }
+      .x-preset { border: 1px solid var(--x-line); background: var(--x-card); border-radius: 999px; padding: 5px 12px; font-size: 13px; cursor: pointer; color: var(--x-ink2); }
+      .x-preset[aria-pressed="true"] { background: var(--x-acc-soft); border-color: var(--x-acc); color: var(--x-acc-ink); }
+      .x-depth { min-width: 120px; } .x-depth input { width: 120px; accent-color: var(--x-acc); }
+      .x-mpfilters { margin-top: 12px; padding: 12px 0 0; border-top: 1px solid var(--x-line); box-shadow: none; background: none; }
+      .x-mpfilters .x-input { width: 120px; }
+      .x-mapcard { position: relative; }
+      .x-net .x-node { cursor: pointer; } .x-net .x-dim { opacity: .18; } .x-net .x-focus .x-dot { stroke: var(--x-acc); stroke-width: 4; }
+      .x-chpanel h3 { margin: 0; font-size: 16px; } .x-chpanel .x-kv { grid-template-columns: repeat(2, minmax(0,1fr)); margin: 12px 0; }
+      .x-chpanel .x-li { padding: 8px 0; }
+      .x-chat { position: fixed; right: 20px; bottom: 20px; width: min(420px, calc(100vw - 40px)); max-height: min(640px, calc(100vh - 40px)); display: flex; flex-direction: column; gap: 10px; padding: 16px; z-index: 50; box-shadow: 0 10px 40px rgba(16,18,40,.18); }
+      .x-chat[hidden] { display: none; }
+      .x-chatlog { flex: 1; overflow: auto; display: grid; gap: 10px; align-content: start; min-height: 120px; }
+      .x-msg { padding: 10px 12px; border-radius: 12px; white-space: pre-wrap; line-height: 1.5; }
+      .x-msg--me { background: var(--x-acc-soft); justify-self: end; max-width: 85%; }
+      .x-msg--ai { background: var(--x-bg); border: 1px solid var(--x-line); }
+      .x-chchip { display: inline-flex; align-items: center; gap: 6px; padding: 1px 8px 1px 2px; border-radius: 999px; border: 1px solid var(--x-line); background: var(--x-card); cursor: pointer; font-weight: 600; font-size: 13px; vertical-align: middle; }
+      .x-chchip img { width: 20px; height: 20px; border-radius: 50%; }
+      .x-topics { display: grid; gap: 14px; }
+      .x-topic { padding: 18px; display: grid; gap: 10px; }
+      .x-topic h3 { margin: 0; font-size: 17px; } .x-topic ol { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
+      .x-badges { display: flex; flex-wrap: wrap; gap: 8px; }
+      .x-badge { font-size: 12px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: var(--x-bg); border: 1px solid var(--x-line); }
+      .x-badge.g { color: #15803d; background: #f0fdf4; border-color: #bbf7d0; } .x-badge.a { color: #b45309; background: #fffbeb; border-color: #fde68a; } .x-badge.r { color: #b91c1c; background: #fef2f2; border-color: #fecaca; }
+      .x-why { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; } .x-why b { font-size: 11px; letter-spacing: .05em; margin-right: 6px; }
+      .x-twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+      .x-homehero { display: grid; grid-template-columns: 1fr minmax(0, 1.2fr); gap: 16px; align-items: center; }
+      .x-homehero h2 { margin: 0 0 4px; }
+      .x-save { border: 0; background: none; cursor: pointer; font-size: 16px; color: var(--x-ink3); padding: 2px 4px; } .x-save[aria-pressed="true"] { color: #f59e0b; }
+      @media (max-width: 900px) { .x-twocol, .x-homehero { grid-template-columns: 1fr; } }
+      body.x-dark { background: #0b0f17; }
+      body.x-dark .x-app { --x-bg: #0b0f17; --x-card: #121826; --x-ink: #e6e8ef; --x-ink2: #a7adbf; --x-ink3: #8b92a7; --x-line: #232b3d; --x-line2: #1a2132; --x-acc: #38bdf8; --x-acc-soft: #0c2a3a; --x-acc-ink: #7dd3fc; --x-coral-soft: #3a1514; color: var(--x-ink); }
+      body.x-dark .x-side, body.x-dark .x-card, body.x-dark .x-top { background: var(--x-card); }
+      body.x-dark .x-input, body.x-dark .x-select { background: #0e1420; border-color: var(--x-line); color: var(--x-ink); }
+      body.x-dark .x-net text { fill: #c9cedb; }
+      /* plan gate */
+      .x-blur { filter: blur(6px); pointer-events: none; user-select: none; }
+      .x-tabs { display: flex; gap: 22px; border-bottom: 1px solid var(--x-line); }
+      .x-tabs button { border: 0; background: none; padding: 10px 0; font-weight: 600; color: var(--x-ink3); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+      .x-tabs button[aria-selected="true"] { color: var(--x-ink); border-bottom-color: var(--x-acc); }
+      .x-pager { display: flex; justify-content: center; gap: 6px; margin-top: 16px; flex-wrap: wrap; }
+      .x-pager button { min-width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--x-line); background: var(--x-card); cursor: pointer; font-weight: 600; color: var(--x-ink2); }
+      .x-pager button[aria-current="page"] { background: var(--x-acc); border-color: var(--x-acc); color: #fff; }
+      .x-unlock { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; background: linear-gradient(90deg, #4f46e5, #5b5bf6); color: #fff; border-radius: 14px; padding: 16px 20px; margin-bottom: 14px; }
+      .x-unlock b { font-size: 17px; } .x-unlock span { opacity: .9; flex: 1; }
+      .x-btn--light { background: #fff !important; color: #312e81 !important; border-color: #fff !important; }
+      .x-locked { position: relative; overflow: hidden; }
+      .x-locked .x-blur { filter: blur(7px); }
+      .x-lockbadge { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(255,255,255,.35); }
+      .x-lockbadge button { background: #fff; border: 1px solid var(--x-line); border-radius: 999px; padding: 8px 14px; font-weight: 600; cursor: pointer; box-shadow: var(--x-shadow); }
+      .x-sidefoot { margin-top: auto; display: grid; gap: 10px; }
+      .x-side { overflow-y: auto; }
+      .x-credits { display: flex; align-items: center; gap: 6px; border: 1px solid var(--x-line); background: var(--x-card); border-radius: 999px; padding: 7px 8px 7px 12px; cursor: pointer; color: var(--x-ink2); font: inherit; width: fit-content; }
+      .x-credits b { color: var(--x-ink); } .x-credits i { font-style: normal; width: 22px; height: 22px; border-radius: 50%; background: #fde68a; color: #92400e; display: grid; place-items: center; font-weight: 700; margin-left: 4px; }
+      .x-me { display: flex; align-items: center; gap: 10px; border: 0; background: none; padding: 8px; border-radius: 12px; cursor: pointer; text-align: left; font: inherit; color: inherit; }
+      .x-me:hover { background: var(--x-bg); }
+      .x-meav { width: 36px; height: 36px; border-radius: 50%; background: var(--x-acc-soft); color: var(--x-acc-ink); display: grid; place-items: center; font-weight: 700; flex: none; }
+      .x-mename { display: grid; flex: 1; min-width: 0; } .x-mename b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .x-mename small { color: var(--x-ink3); }
+      .x-legal { display: flex; flex-wrap: wrap; gap: 4px 10px; padding: 0 8px; font-size: 12px; } .x-legal a { color: var(--x-ink3); text-decoration: none; } .x-legal a:hover { text-decoration: underline; }
+      .x-acc-row { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--x-line2); } .x-acc-row:last-child { border-bottom: 0; }
+      .x-acc-row span { color: var(--x-ink3); }
+      .x-meter { display: grid; gap: 6px; margin: 10px 0; } .x-meter div { display: flex; justify-content: space-between; } .x-meter .x-bar { height: 8px; }
+      .x-announce { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; border-radius: 12px; padding: 10px 14px; }
+      .x-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 24px; align-items: center; padding: 8px 0 24px; border-bottom: 1px solid var(--x-line); }
+      .x-herol { display: grid; gap: 10px; align-content: start; }
+      .x-date { margin: 0; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--x-ink3); font-weight: 600; }
+      .x-greet { margin: 0 0 6px; font-size: 30px; letter-spacing: -.02em; }
+      .x-total { margin: 0 0 14px; color: var(--x-ink2); } .x-plus { background: #dcfce7; color: #15803d; border-radius: 999px; padding: 1px 8px; font-weight: 600; font-size: 12px; }
+      .x-eyebrow { margin: 0; color: var(--x-acc-ink); font-weight: 600; }
+      .x-big { font-size: 20px; height: 60px; padding: 0 18px; max-width: 460px; }
+      #hm-mine .x-btn, #hm-chan .x-btn { width: fit-content; }
+      .x-heror { display: grid; grid-template-columns: minmax(0,1fr) 220px; gap: 12px; align-items: center; }
+      .x-mini { width: 100%; height: auto; }
+      .x-mystats { display: grid; grid-template-columns: repeat(3, auto); gap: 0; border-top: 1px solid var(--x-line); border-bottom: 1px solid var(--x-line); padding: 12px 0; margin: 10px 0; max-width: 460px; }
+      .x-mystats div { padding: 0 16px; border-left: 1px solid var(--x-line); } .x-mystats div:first-child { padding-left: 0; border-left: 0; }
+      .x-mystats b { display: block; font-size: 22px; } .x-mystats span { color: var(--x-ink3); font-size: 13px; }
+      .x-myhead { display: flex; align-items: center; gap: 14px; } .x-myhead img, .x-myhead .x-av { width: 64px; height: 64px; border-radius: 50%; border: 3px solid var(--x-acc-soft); }
+      .x-myhead h3 { margin: 0; font-size: 26px; }
+      .x-linkbtn { border: 0; background: none; color: var(--x-acc-ink); font-weight: 600; cursor: pointer; }
+      .x-vgrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+      .x-vcard { display: grid; gap: 6px; text-decoration: none; color: inherit; }
+      .x-vcard .x-vthumb { aspect-ratio: 16/9; border-radius: 12px; background-size: cover; background-position: center; position: relative; border: 1px solid var(--x-line); }
+      .x-vcard .x-dur { position: absolute; right: 6px; bottom: 6px; background: rgba(0,0,0,.75); color: #fff; font-size: 12px; padding: 1px 6px; border-radius: 6px; }
+      .x-vcard p { margin: 0; font-weight: 600; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+      .x-vmeta { display: flex; gap: 6px; align-items: center; color: var(--x-ink3); font-size: 13px; flex-wrap: wrap; }
+      .x-xb { background: #fef3c7; color: #b45309; font-weight: 700; border-radius: 6px; padding: 0 6px; }
+      .x-vch { display: flex; gap: 6px; align-items: center; color: var(--x-ink3); font-size: 13px; } .x-vch img { width: 18px; height: 18px; border-radius: 50%; }
+      .x-orow { display: grid; grid-template-columns: 56px minmax(0,1fr) auto; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--x-line2); }
+      .x-orow:last-child { border-bottom: 0; }
+      .x-orow .x-oth { width: 56px; height: 56px; border-radius: 10px; background-size: cover; background-position: center; }
+      .x-orow b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .x-orow .x-oval { text-align: right; font-weight: 700; } .x-orow .x-oval small { display: block; font-weight: 500; color: var(--x-ink3); }
+      .x-nrow { display: grid; grid-template-columns: minmax(0,1fr) repeat(3, 84px); gap: 8px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--x-line2); font-size: 13px; }
+      .x-nrow span { color: var(--x-ink3); } .x-nrow b { display: block; font-size: 15px; color: var(--x-ink); }
+      @media (max-width: 1180px) { .x-vgrid { grid-template-columns: repeat(2, minmax(0,1fr)); } .x-hero, .x-heror { grid-template-columns: 1fr; } }
+      .x-authbox { width: min(440px, 100%); }
+      .x-authform { display: grid; gap: 12px; margin-top: 12px; }
+      .x-pricebox { width: min(1060px, 100%); overflow: auto; }
+      .x-plans { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; margin-top: 12px; }
+      .x-plan { border: 1px solid var(--x-line); border-radius: 16px; padding: 18px; display: grid; gap: 10px; align-content: start; background: var(--x-card); }
+      .x-plan.hl { border-color: var(--x-acc); box-shadow: 0 0 0 3px var(--x-acc-soft); }
+      .x-plan h3 { margin: 0; } .x-price { font-size: 30px; font-weight: 700; } .x-price small { font-size: 14px; color: var(--x-ink3); font-weight: 500; }
+      .x-plan ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; color: var(--x-ink2); }
+      .x-paygrid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 12px; }
+      .x-qr { width: 220px; max-width: 100%; border-radius: 12px; border: 1px solid var(--x-line); background: #fff; padding: 8px; }
+      .x-steps { margin: 0; padding-left: 20px; display: grid; gap: 4px; color: var(--x-ink2); }
+      .x-botfab { position: fixed; right: 20px; bottom: 20px; z-index: 45; border: 0; border-radius: 999px; padding: 12px 18px; background: var(--x-acc); color: #fff; font-weight: 600; cursor: pointer; box-shadow: 0 8px 24px rgba(91,91,246,.35); font: inherit; font-weight: 600; }
+      .x-netwrap { position: relative; }
+      .x-net { width: 100%; height: 640px; background: radial-gradient(ellipse at center, #f3f4ff 0%, var(--x-card) 70%); border-radius: 14px; touch-action: none; cursor: grab; }
+      .x-net.x-mini { height: auto; cursor: default; background: none; }
+      .x-zoom { position: absolute; left: 12px; bottom: 12px; display: grid; border: 1px solid var(--x-line); border-radius: 12px; overflow: hidden; background: var(--x-card); }
+      .x-zoom button { width: 40px; height: 40px; border: 0; border-bottom: 1px solid var(--x-line); background: none; cursor: pointer; font-size: 18px; color: var(--x-ink2); } .x-zoom button:last-child { border-bottom: 0; }
+      .x-maplegend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 10px; color: var(--x-ink3); font-size: 13px; align-items: center; }
+      .x-maplegend i { display: inline-block; vertical-align: middle; margin-right: 6px; } .x-maplegend .l1 { width: 22px; height: 3px; background: #5b8fd6; border-radius: 2px; }
+      .x-maplegend .l2, .x-maplegend .l3 { width: 12px; height: 12px; border-radius: 50%; border: 2px solid #38bdf8; } .x-maplegend .l3 { border-color: #22c55e; }
+      @media (min-width: 1181px) { .x-mapgrid { grid-template-columns: minmax(0, 1fr) 380px; } }
+      .x-chpanel { display: grid; gap: 12px; max-height: 760px; overflow: auto; }
+      .x-chtop { display: grid; grid-template-columns: 56px minmax(0,1fr) auto; gap: 12px; align-items: center; }
+      .x-chtop img, .x-chtop .x-av { width: 56px; height: 56px; border-radius: 50%; }
+      .x-chtop h3 { margin: 0; font-size: 17px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .x-statbox { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; } .x-statbox div { background: var(--x-bg); border-radius: 12px; padding: 12px; } .x-statbox b { display: block; font-size: 20px; } .x-statbox span { color: var(--x-ink3); font-size: 13px; }
+      .x-best { display: grid; grid-template-columns: 120px minmax(0,1fr); gap: 10px; background: var(--x-bg); border-radius: 12px; padding: 10px; text-decoration: none; color: inherit; }
+      .x-best .x-vthumb { aspect-ratio: 16/9; border-radius: 8px; background-size: cover; background-position: center; }
+      .x-best big { color: var(--x-acc-ink); font-weight: 700; font-size: 20px; }
+      .x-btnrow { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+      .x-pv { display: grid; grid-template-columns: 128px minmax(0,1fr); gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--x-line2); }
+      .x-pv .x-vthumb { aspect-ratio: 16/9; border-radius: 8px; background-size: cover; background-position: center; position: relative; }
+      .x-pv p { margin: 0 0 4px; font-weight: 600; font-size: 13px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+      .x-pv .x-liverow { gap: 6px; margin-top: 4px; }
+      body.x-dark .x-net { background: radial-gradient(ellipse at center, #10213a 0%, #0b0f17 70%); }
+      @media (max-width: 1180px) { .x-plans { grid-template-columns: repeat(2, minmax(0,1fr)); } .x-paygrid { grid-template-columns: 1fr; } }
     </style>
   </head>
   <body class="x-body">
@@ -202,22 +343,35 @@
             <span>TubeRadar</span>
           </div>
           <nav class="x-navlist" aria-label="Views">
-            <button class="x-navbtn" data-view="radar" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 12l6-6"/></svg>Viral Radar</button>
-            <button class="x-navbtn" data-view="live"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Live Search</button>
-            <button class="x-navbtn" data-view="analyzer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Channel Analyzer</button>
-            <button class="x-navbtn" data-view="map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><circle cx="4.5" cy="5.5" r="2"/><circle cx="19.5" cy="5.5" r="2"/><circle cx="18" cy="19" r="2"/><path d="M9.8 10 6 7M14.2 10 18 7M14 14.5l2.7 3"/></svg>Competitor Map</button>
-            <button class="x-navbtn" data-view="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Settings</button>
-          </nav>
-          <div class="x-quota">
-            <p>API quota today (this browser)</p>
-            <strong id="x-quota-text">0 / 10,000 units</strong>
-            <div class="x-bar" role="progressbar" id="x-quota-bar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="API quota used"><i style="width: 0%"></i></div>
+<button class="x-navbtn" data-view="home" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>Home</button>
+<p class="x-navgroup">Niche Finder</p>
+<button class="x-navbtn" data-view="radar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 12l6-6"/></svg>Real Time (24h)</button>
+<button class="x-navbtn" data-view="avp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>AVP Channels (30d)</button>
+<button class="x-navbtn" data-view="live"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Live Search</button>
+<p class="x-navgroup">Research</p>
+<button class="x-navbtn" data-view="map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><circle cx="4.5" cy="5.5" r="2"/><circle cx="19.5" cy="5.5" r="2"/><circle cx="18" cy="19" r="2"/><path d="M9.8 10 6 7M14.2 10 18 7M14 14.5l2.7 3"/></svg>Map</button>
+<button class="x-navbtn" data-view="topics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.2 5.6L20 9.3l-4.5 3.8 1.4 5.9L12 15.9 7.1 19l1.4-5.9L4 9.3l5.8-.7z"/></svg>Topics (AI)</button>
+<button class="x-navbtn" data-view="analyzer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Channel Analyzer</button>
+<button class="x-navbtn" data-view="saved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4z"/></svg>Saved &amp; Tracker</button>
+<p class="x-navgroup">More</p>
+<button class="x-navbtn" data-view="tools"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-.5-.5-2.5z"/></svg>Tools</button>
+<button class="x-navbtn" data-view="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Settings</button>
+</nav>
+          <div class="x-sidefoot">
+            <div class="x-quota">
+              <p>Credits today</p>
+              <strong id="x-quota-text">Login to get credits</strong>
+              <div class="x-bar" role="progressbar" id="x-quota-bar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Credits used"><i style="width: 0%"></i></div>
+            </div>
+            <button class="x-credits" type="button" data-pricing><span>🪙</span><b id="x-credleft">–</b> credits left<i>+</i></button>
+            <button class="x-me" type="button" id="x-me"><span class="x-meav" id="x-meav">?</span><span class="x-mename"><b id="x-mename">Sign in</b><small id="x-meplan">Free</small></span><span aria-hidden="true">⌃⌄</span></button>
+            <nav class="x-legal"><a href="legal.html#terms">Terms</a><a href="legal.html#privacy">Privacy</a><a href="legal.html#copyright">Copyright</a><a href="legal.html#refund">Refunds</a></nav>
           </div>
         </aside>
 
         <div class="x-mainwrap">
           <header class="x-top">
-            <div class="x-title"><h1 id="x-viewtitle">Viral Radar</h1><span class="x-sample" id="x-status">Loading…</span></div>
+            <div class="x-title"><h1 id="x-viewtitle">Home</h1><span class="x-sample" id="x-status">Loading…</span></div>
             <label class="x-search">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
               <input class="x-input" id="top-q" type="search" placeholder="Search niche or paste channel URL…" aria-label="Search niche or paste channel URL" />
@@ -228,32 +382,102 @@
 
           <main>
             <!-- VIEW 1 -->
-            <section class="x-view" id="view-radar" data-title="Viral Radar">
+            <section class="x-view" id="view-home" data-title="Home">
+              <div class="x-announce" id="hm-ann" hidden></div>
+              <div class="x-hero">
+                <div class="x-herol">
+                  <p class="x-date" id="hm-date"></p>
+                  <h2 class="x-greet" id="hm-greet">Welcome</h2>
+                  <p class="x-total">Total channels analysed: <b id="hm-total">–</b> <span class="x-plus" id="hm-new"></span></p>
+                  <div id="hm-mine">
+                    <p class="x-eyebrow">Your channel</p>
+                    <input class="x-input x-big" id="hm-q" type="text" placeholder="Which channel is yours?" aria-label="Your channel" />
+                    <p class="x-meta">Start typing to pick it, or paste a link, an @handle or a channel ID.</p>
+                    <button class="x-btn" id="hm-go">Find competitors</button>
+                  </div>
+                  <div id="hm-chan" hidden></div>
+                </div>
+                <div class="x-heror">
+                  <svg class="x-net x-mini" id="hm-net" viewBox="0 0 520 380" role="img" aria-label="Map preview"></svg>
+                  <div class="x-around" id="hm-around"><p class="x-eyebrow">Around your channel</p><p class="x-meta">Who's around you, who's breaking out, and how close they are.</p></div>
+                </div>
+              </div>
+              <div class="x-twocol">
+                <div class="x-card x-pad">
+                  <div class="x-sechead"><h2>Recently added outlier channels</h2><button class="x-linkbtn" type="button" data-go="radar">View all →</button></div>
+                  <div class="x-tabs" id="hm-win"><button data-v="24h" aria-selected="true">Last 24 Hours</button><button data-v="7d" aria-selected="false">7 Days</button><button data-v="30d" aria-selected="false">30 Days</button></div>
+                  <div class="x-list" id="hm-outl"></div>
+                </div>
+                <div class="x-card x-pad">
+                  <div class="x-sechead"><h2>Niches with high future competition</h2><button class="x-linkbtn" type="button" data-go="avp">View all →</button></div>
+                  <p class="x-meta">New channels entering each niche, from the collector's last runs.</p>
+                  <div class="x-list" id="hm-niches"></div>
+                </div>
+              </div>
+              <div><div class="x-sechead"><h2 id="hm-btitle">Breaking out right now</h2><p id="hm-bsub">Recent videos far above their channel's usual views, on channels TubeRadar follows.</p></div><div class="x-vgrid" id="hm-break"></div></div>
+            </section>
+
+            <section class="x-view" id="view-radar" data-title="Real Time Channels (last 24h)" hidden>
               <div class="x-stats" id="x-stats"></div>
+              <div class="x-tabs" id="r-win" role="tablist"><button data-v="24h" aria-selected="true">Last 24 Hours</button><button data-v="7d" aria-selected="false">7 Days</button><button data-v="30d" aria-selected="false">30 Days</button><button data-v="90d" aria-selected="false">90 Days</button></div>
+              <div class="x-chips x-presets" id="pre-radar"></div>
               <div class="x-card x-filters">
-                <div class="x-fgroup"><span class="x-flabel">Window</span><div class="x-seg" data-seg id="f-window"><button data-v="24" aria-pressed="true">24h</button><button data-v="48" aria-pressed="false">48h</button><button data-v="168" aria-pressed="false">7d</button></div></div>
+                <label class="x-fgroup"><span class="x-flabel">Channel age</span><select class="x-select" id="f-age"><option value="30">Under 1 month</option><option value="60">Under 2 months</option><option value="90" selected>Under 3 months</option></select></label>
                 <div class="x-fgroup"><span class="x-flabel">Format</span><div class="x-seg" data-seg id="f-format"><button data-v="all" aria-pressed="true">All</button><button data-v="long" aria-pressed="false">Long</button><button data-v="short" aria-pressed="false">Shorts</button></div></div>
                 <label class="x-fgroup"><span class="x-flabel">Max subscribers</span><select class="x-select" id="f-subs"><option value="10000">10K</option><option value="50000">50K</option><option value="100000" selected>100K</option><option value="500000">500K</option><option value="1e12">Any</option></select></label>
                 <label class="x-fgroup"><span class="x-flabel">Min outlier</span><select class="x-select" id="f-out"><option value="0">Any</option><option value="2">2x</option><option value="3" selected>3x</option><option value="5">5x</option><option value="10">10x</option></select></label>
-                <button class="x-toggle" id="x-newonly" aria-pressed="false"><i></i>New channels only</button>
-                <button class="x-btn x-btn--ghost" id="x-scan" title="Runs the collector in your browser with your API key">Scan now</button>
+                <button class="x-toggle" id="x-monet" aria-pressed="true"><i></i>Monetization complete</button>
+                <button class="x-toggle" id="x-tier1" aria-pressed="false" title="Sirf woh channels jin ka country US, UK, CA, AU ya doosra Tier-1 hai"><i></i>Tier-1 only</button>
               </div>
               <div>
-                <div class="x-sechead"><h2>Breakout channels</h2><p id="x-chcount">—</p></div>
+                <div class="x-sechead"><h2 id="x-chtitle">New channels going viral</h2><p id="x-chcount">—</p></div>
+                <div class="x-unlock" id="x-unlock" hidden><b>Unlock all growing channels</b><span>Free plan par sirf 2 channels dikhte hain. Baqi dekhne ke liye plan lein.</span><button class="x-btn x-btn--light" type="button" data-pricing>Get Access Now</button></div>
                 <div class="x-grid" id="x-channels"></div>
+                <div class="x-pager" id="x-pager"></div>
               </div>
               <div>
-                <div class="x-sechead"><h2 id="x-trendtitle">Trending videos</h2><p>Click a column to sort</p></div>
+                <div class="x-sechead"><h2 id="x-trendtitle">All new growing channels</h2><p>Click a column to sort</p></div>
                 <div class="x-card x-tablewrap">
                   <table class="x-table" id="x-trend">
                     <thead><tr>
-                      <th scope="col"><button data-k="title">Video</button></th>
+                      <th scope="col"><button data-k="title">Channel</button></th>
                       <th scope="col"><button data-k="niche">Niche</button></th>
-                      <th scope="col"><button data-k="views">Views</button></th>
-                      <th scope="col" aria-sort="descending"><button data-k="vph">Views/hour</button></th>
-                      <th scope="col"><button data-k="out">Outlier</button></th>
                       <th scope="col"><button data-k="subs">Subs</button></th>
-                      <th scope="col"><button data-k="hrs">Published</button></th>
+                      <th scope="col"><button data-k="spd">Subs/day</button></th>
+                      <th scope="col"><button data-k="age">Age</button></th>
+                      <th scope="col" aria-sort="descending"><button data-k="out">Best outlier (24h)</button></th>
+                      <th scope="col"><button data-k="views">Views (24h video)</button></th>
+                      <th scope="col">Monetization</th>
+                    </tr></thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+
+            <!-- VIEW AVP -->
+            <section class="x-view" id="view-avp" data-title="AVP Finder (30 days)" hidden>
+              <div class="x-stats" id="avp-stats"></div>
+              <div class="x-chips x-presets" id="pre-avp"></div>
+              <div class="x-card x-filters">
+                <div class="x-fgroup"><span class="x-flabel">Format</span><div class="x-seg" data-seg id="avp-format"><button data-v="all" aria-pressed="true">All</button><button data-v="long" aria-pressed="false">Long</button><button data-v="short" aria-pressed="false">Shorts</button></div></div>
+                <label class="x-fgroup"><span class="x-flabel">Max subscribers</span><select class="x-select" id="avp-subs"><option value="5000">5K</option><option value="10000">10K</option><option value="50000">50K</option><option value="100000" selected>100K</option></select></label>
+                <label class="x-fgroup"><span class="x-flabel">AVP vs subs</span><select class="x-select" id="avp-ratio"><option value="1" selected>AVP &gt; subs</option><option value="2">2x subs</option><option value="5">5x subs</option><option value="10">10x subs</option></select></label>
+                <label class="x-fgroup"><span class="x-flabel">Min AVP</span><select class="x-select" id="avp-min"><option value="1000" selected>1K</option><option value="2000">2K</option><option value="5000">5K</option><option value="10000">10K</option></select></label>
+                <button class="x-toggle" id="avp-monet" aria-pressed="false"><i></i>Monetization complete</button>
+              </div>
+              <div>
+                <div class="x-sechead"><h2>Channels with more views per video than subscribers</h2><p id="avp-count">—</p></div>
+                <div class="x-card x-tablewrap">
+                  <table class="x-table" id="avp-table">
+                    <thead><tr>
+                      <th scope="col">Channel</th>
+                      <th scope="col">Subs</th>
+                      <th scope="col">AVP (30d)</th>
+                      <th scope="col">AVP ÷ subs</th>
+                      <th scope="col">Videos (30d)</th>
+                      <th scope="col">Best video</th>
+                      <th scope="col">Monetization</th>
                     </tr></thead>
                     <tbody></tbody>
                   </table>
@@ -269,7 +493,7 @@
                   <div class="x-seg" data-seg id="live-win"><button data-v="24" aria-pressed="true">24h</button><button data-v="48" aria-pressed="false">48h</button><button data-v="168" aria-pressed="false">7d</button></div>
                   <button class="x-btn" id="live-go">Search YouTube</button>
                 </div>
-                <p class="x-note"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Costs ~105 quota units per search</p>
+                <p class="x-note"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Har search ~12 credits</p>
               </div>
               <div>
                 <div class="x-sechead"><h2 id="live-title">Search a niche to see what is breaking out</h2><p id="live-sub">Sorted by views/hour</p></div>
@@ -284,6 +508,7 @@
                   <input class="x-input" id="an-q" type="text" placeholder="Paste a channel URL or @handle" aria-label="Channel URL or handle" />
                   <button class="x-btn" id="an-go">Analyze</button>
                   <button class="x-btn x-btn--ghost" id="an-map">Build competitor map</button>
+                  <button class="x-btn x-btn--ghost" id="an-json" title="Titles, hooks, thumbnails, keywords, hashtags, story arc, cliffhangers">Download strategy JSON</button>
                 </div>
               </div>
               <div class="x-card x-pad x-profile" id="an-profile" hidden>
@@ -306,50 +531,125 @@
                 <div class="x-sechead"><h2>Top outliers</h2><p id="an-outsub">Analyze a channel first</p></div>
                 <div class="x-card x-list" id="x-outliers"></div>
               </div>
-            </section>
-
-            <!-- VIEW 4 -->
-            <section class="x-view" id="view-map" data-title="Competitor Map" hidden>
-              <div class="x-mapgrid">
-                <div class="x-card x-pad">
-                  <div class="x-sechead"><h2 id="map-title">Analyze a channel, then build its map</h2>
-                    <div class="x-legend"><span><i style="background:#5b5bf6;border-radius:50%"></i>Your channel</span><span><i style="background:#fff;border:2px solid #f25c54;border-radius:50%"></i>Recent breakout</span><span>Size = subscribers · thicker line = closer</span></div>
-                  </div>
-                  <svg class="x-net" id="x-net" viewBox="0 0 860 600" role="img" aria-label="Competitor network"></svg>
+              <div id="an-allwrap" hidden>
+                <div class="x-sechead"><h2 id="an-alltitle">All videos</h2><p>Transcript aur Rewrite ke liye Settings mein Gemini key chahiye</p></div>
+                <div class="x-card x-tablewrap">
+                  <table class="x-table" id="an-all">
+                    <thead><tr><th scope="col">Video</th><th scope="col">Views</th><th scope="col">Published</th><th scope="col">Outlier</th><th scope="col">Length</th><th scope="col">Tools</th></tr></thead>
+                    <tbody></tbody>
+                  </table>
                 </div>
-                <div style="display:grid;gap:16px">
-                  <div class="x-card x-pad">
-                    <div class="x-sechead"><h2>Closest competitors</h2><p>Closeness</p></div>
-                    <div id="x-ranks"></div>
-                  </div>
-                  <div class="x-card x-pad">
-                    <div class="x-sechead"><h2>Breakout titles to learn from</h2><p>From competitors</p></div>
-                    <div class="x-ideas" id="x-ideas">
-                    </div>
-                  </div>
-                </div>
+                <div class="x-liverow" style="justify-content:center;margin-top:12px"><button class="x-btn x-btn--ghost" id="an-more">Load 50 more</button></div>
               </div>
             </section>
 
+            <!-- VIEW 4 -->
+            <section class="x-view" id="view-map" data-title="Map" hidden>
+              <div class="x-card x-livebox">
+                <div class="x-liverow">
+                  <input class="x-input" id="mp-q" type="text" placeholder="Any channel's name, link or @handle" aria-label="Channel to map" />
+                  <button class="x-btn" id="mp-go">Map it</button>
+                  <label class="x-fgroup x-depth"><span class="x-flabel">Depth <b id="mp-depthv">1</b></span><input type="range" id="mp-depth" min="1" max="2" value="1" aria-label="Map depth" /></label>
+                  <button class="x-btn x-btn--ghost" id="mp-filt">Filters</button>
+                  <button class="x-btn x-btn--ghost" id="mp-export">Export</button>
+                  <button class="x-btn x-btn--ghost" id="mp-chatbtn" aria-label="Chat">💬 Chat</button>
+                </div>
+                <p class="x-note" id="mp-depthtext">One step out: the channels YouTube shows for the same topics as this channel. ~70 credits.</p>
+                <div class="x-filters x-mpfilters" id="mp-filters" hidden>
+                  <label class="x-fgroup"><span class="x-flabel">Subscribers from</span><input class="x-input" id="mf-smin" type="number" min="0" placeholder="0" /></label>
+                  <label class="x-fgroup"><span class="x-flabel">to</span><input class="x-input" id="mf-smax" type="number" min="0" placeholder="any" /></label>
+                  <label class="x-fgroup"><span class="x-flabel">Views, last 30 days ≥</span><input class="x-input" id="mf-v30" type="number" min="0" placeholder="0" /></label>
+                  <label class="x-fgroup"><span class="x-flabel">Avg length (min) from</span><input class="x-input" id="mf-lmin" type="number" min="0" placeholder="0" /></label>
+                  <label class="x-fgroup"><span class="x-flabel">to</span><input class="x-input" id="mf-lmax" type="number" min="0" placeholder="any" /></label>
+                  <label class="x-fgroup"><span class="x-flabel">Language</span><select class="x-select" id="mf-lang"><option value="">Any</option></select></label>
+                  <label class="x-fgroup"><span class="x-flabel">Breakout badge at</span><select class="x-select" id="mf-br"><option value="3">3×+</option><option value="5">5×+</option><option value="10">10×+</option><option value="20">20×+</option><option value="50">50×+</option></select></label>
+                  <div class="x-fgroup"><span class="x-flabel">Channels left out</span><div class="x-seg" data-seg id="mf-mode"><button data-v="dim" aria-pressed="true">Dim</button><button data-v="hide" aria-pressed="false">Hide</button></div></div>
+                  <button class="x-btn x-btn--ghost" id="mf-reset" type="button">Reset</button>
+                </div>
+              </div>
+              <div class="x-mapgrid">
+                <div class="x-card x-pad x-mapcard">
+                  <div class="x-sechead"><h2 id="map-title">Map a channel's niche</h2>
+                    <p class="x-meta" id="mp-sub"></p>
+                  </div>
+                  <div class="x-netwrap">
+                    <svg class="x-net" id="x-net" viewBox="0 0 860 600" role="img" aria-label="Competitor network"></svg>
+                    <div class="x-zoom"><button type="button" id="mp-zin" aria-label="Zoom in">+</button><button type="button" id="mp-zout" aria-label="Zoom out">−</button><button type="button" id="mp-zfit" aria-label="Fit the map">⤢</button></div>
+                  </div>
+                  <div class="x-maplegend"><span><i class="l1"></i>Bolder lines, stronger links</span><span><i class="l2"></i>Center</span><span><i class="l3"></i>Mapped</span><span><b class="x-xb">N×</b> Breakout</span><span id="mp-hidden"></span><span>Bigger circles, more views this month</span></div>
+                </div>
+                <div style="display:grid;gap:16px;align-content:start">
+                  <div class="x-card x-pad x-chpanel" id="mp-panel" hidden></div>
+                  <div class="x-card x-pad">
+                    <div class="x-sechead"><h2>Small &amp; growing fast</h2><p>Priority</p></div>
+                    <div id="x-ranks"></div>
+                  </div>
+                  <div class="x-card x-pad">
+                    <div class="x-sechead"><h2>Breakout titles to learn from</h2><p>Last 30 days</p></div>
+                    <div class="x-ideas" id="x-ideas"></div>
+                  </div>
+                </div>
+              </div>
+
+            </section>
+
+            <section class="x-view" id="view-topics" data-title="Topics" hidden>
+              <div class="x-card x-pad x-topset">
+                <div class="x-liverow">
+                  <input class="x-input" id="tp-q" type="text" placeholder="Your channel: link, @handle or ID" aria-label="Your channel" />
+                  <button class="x-btn x-btn--ghost" id="tp-find">Find competitors</button>
+                </div>
+                <div><span class="x-flabel">Channels to learn from</span><div class="x-chips" id="tp-learn"><span class="x-meta">None yet: Find competitors dabayein, ya Map se channels "Learn from it" karein.</span></div>
+                  <form class="x-liverow" id="tp-add"><input class="x-input" type="text" placeholder="A competitor the map didn't find? Add it (@handle)" aria-label="Add competitor" /><button class="x-btn x-btn--ghost" type="submit">Add</button></form></div>
+                <div class="x-liverow">
+                  <label class="x-fgroup"><span class="x-flabel">Topics each time</span><input class="x-input" id="tp-n" type="number" min="1" max="20" value="8" /></label>
+                  <label class="x-fgroup"><span class="x-flabel">Titles per topic</span><input class="x-input" id="tp-t" type="number" min="1" max="10" value="5" /></label>
+                  <label class="x-fgroup" style="flex:2"><span class="x-flabel">About your channel and the topics you want</span><input class="x-input" id="tp-about" type="text" maxlength="2000" placeholder="What your channel is about, who watches it, topics to aim for or to avoid…" /></label>
+                </div>
+                <div class="x-liverow"><button class="x-toggle" id="tp-check" aria-pressed="false"><i></i>Check topics on YouTube (100 units/topic)</button><button class="x-btn" id="tp-go">Generate topics</button><button class="x-btn x-btn--ghost" id="tp-ask">Ask a question</button></div>
+              </div>
+              <div class="x-sechead"><h2 id="tp-title">Topics</h2><p id="tp-sub">Gemini aapke aur competitors ke breakout videos parh kar topics banata hai</p></div>
+              <div class="x-topics" id="tp-list"></div>
+              <form class="x-card x-pad x-liverow" id="tp-more" hidden><input class="x-input" id="tp-morein" type="text" placeholder="Ask for more: e.g. More titles for #1 · Shorter titles for #3 · Only topics about the Tudors" aria-label="Ask for more" /><button class="x-btn" type="submit">Send</button></form>
+            </section>
+
+            <section class="x-view" id="view-saved" data-title="Saved &amp; Channel Tracker" hidden>
+              <div>
+                <div class="x-sechead"><h2>Channel Tracker</h2><div class="x-liverow" style="margin:0"><span class="x-meta" id="sv-upd"></span><button class="x-btn x-btn--ghost" id="sv-refresh">Update numbers</button></div></div>
+                <div class="x-card x-tablewrap"><table class="x-table" id="sv-ch"><thead><tr><th scope="col">Channel</th><th scope="col">Subs</th><th scope="col">Views, last 48h</th><th scope="col">Subs, last 48h</th><th scope="col">Total views</th><th scope="col"></th></tr></thead><tbody></tbody></table></div>
+              </div>
+              <div>
+                <div class="x-sechead"><h2>Swipe File</h2><select class="x-select" id="sv-folder" aria-label="Folder"></select></div>
+                <div class="x-grid" id="sv-vids"></div>
+              </div>
+            </section>
+
+            <section class="x-view" id="view-tools" data-title="Tools" hidden>
+              <p class="x-meta">Quick tools for any YouTube video.</p>
+              <div class="x-card x-pad"><div class="x-liverow"><input class="x-input" id="tl-q" type="text" placeholder="Paste a YouTube video link" aria-label="Video link" /><button class="x-btn" id="tl-tx">Get transcript</button><button class="x-btn x-btn--ghost" id="tl-an">Analyse video (hook, arc, thumbnail)</button><button class="x-btn x-btn--ghost" id="tl-rw">Original rewrite</button></div></div>
+              <div class="x-card x-pad" id="tl-thumb"><h2>Download thumbnail</h2><p class="x-meta">Video link paste karein, phir size chunein.</p><div class="x-liverow" id="tl-sizes"></div></div>
+            </section>
+
             <!-- VIEW 5 -->
-            <section class="x-view" id="view-settings" data-title="Settings" hidden>
+            <section class="x-view" id="view-settings" data-title="Account &amp; Settings" hidden>
               <div class="x-settings">
-                <div class="x-card x-pad">
-                  <h2>YouTube Data API key</h2>
-                  <p class="x-help">Your key stays in your browser. Get one free from Google Cloud Console → YouTube Data API v3.</p>
-                  <div class="x-liverow"><input class="x-input" id="set-key" type="password" placeholder="AIza…" aria-label="API key" autocomplete="off" /><button class="x-btn" id="x-save">Save</button><button class="x-btn x-btn--ghost" id="x-clearkey">Clear</button></div>
+                <div class="x-card x-pad" id="acc-card">
+                  <h2>Your account</h2>
+                  <div id="acc-body"><p class="x-meta">Login karein.</p></div>
                 </div>
                 <div class="x-card x-pad">
-                  <h2>Tracked niches</h2>
-                  <p class="x-help">"Scan now" uses these keywords. For the 6-hourly GitHub collector, paste them into config/keywords.json.</p>
-                  <div class="x-chips" id="x-niches"></div>
-                  <form class="x-liverow" id="x-addniche"><input class="x-input" type="text" placeholder="Add a niche keyword" aria-label="Add a niche keyword" /><button class="x-btn x-btn--ghost" type="submit">Add</button></form>
-                  <div class="x-liverow"><button class="x-btn x-btn--ghost" id="x-copycfg" type="button">Copy as keywords.json</button></div>
+                  <h2>Today's usage</h2>
+                  <div id="acc-usage"></div>
+                  <p class="x-help">Credits har din 00:00 UTC (Pakistan mein subah 5 baje) reset hote hain.</p>
                 </div>
-                <div class="x-card x-pad x-sched">
-                  <span class="x-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
-                  <div><h2>Collector schedule</h2><p class="x-meta" id="x-schedtext">Every 6 hours via GitHub Actions (free)</p></div>
-                  <span class="x-ok" id="x-schedok">Active</span>
+                <div class="x-card x-pad">
+                  <h2>Payments</h2>
+                  <div id="acc-pays"><p class="x-meta">Abhi koi payment nahi.</p></div>
+                </div>
+                <div class="x-card x-pad">
+                  <h2>Preferences</h2>
+                  <div class="x-liverow"><label class="x-fgroup"><span class="x-flabel">Theme</span><div class="x-seg" data-seg id="set-theme"><button data-v="light" aria-pressed="true">Light</button><button data-v="dark" aria-pressed="false">Dark</button></div></label>
+                  <label class="x-fgroup"><span class="x-flabel">Rewrite language</span><select class="x-select" id="set-lang"><option>English</option><option>Urdu (Roman)</option><option>Urdu</option><option>Hindi</option><option>Same as original</option></select></label></div>
                 </div>
               </div>
             </section>
@@ -357,8 +657,70 @@
         </div>
       </div>
     </div>
+    <div class="x-modal" id="x-modal" hidden>
+      <div class="x-card x-modalbox" role="dialog" aria-modal="true" aria-labelledby="x-mtitle">
+        <div class="x-sechead"><h2 id="x-mtitle">Transcript</h2><button class="x-btn x-btn--ghost" id="x-mclose" type="button">Close</button></div>
+        <p class="x-meta" id="x-msub"></p>
+        <textarea class="x-input x-mtext" id="x-mtext" readonly></textarea>
+        <div class="x-liverow"><button class="x-btn" id="x-mcopy" type="button">Copy</button><button class="x-btn x-btn--ghost" id="x-mdl" type="button">Download .txt</button><button class="x-btn x-btn--ghost" id="x-mrw" type="button">Rewrite (original script)</button></div>
+      </div>
+    </div>
+    <div class="x-modal" id="x-auth" hidden>
+      <div class="x-card x-modalbox x-authbox" role="dialog" aria-modal="true" aria-labelledby="au-title">
+        <div class="x-sechead"><h2 id="au-title">Sign in</h2><button class="x-btn x-btn--ghost x-mini" type="button" data-close>Close</button></div>
+        <div class="x-tabs" id="au-tabs"><button data-v="in" aria-selected="true">Sign in</button><button data-v="up" aria-selected="false">Create account</button></div>
+        <form id="au-form" class="x-authform">
+          <label class="x-fgroup" id="au-namewrap" hidden><span class="x-flabel">Full name</span><input class="x-input" id="au-name" type="text" autocomplete="name" /></label>
+          <label class="x-fgroup"><span class="x-flabel">Email</span><input class="x-input" id="au-email" type="email" required autocomplete="email" /></label>
+          <label class="x-fgroup"><span class="x-flabel">Password</span><input class="x-input" id="au-pw" type="password" required minlength="6" autocomplete="current-password" /></label>
+          <button class="x-btn" type="submit" id="au-submit">Sign in</button>
+          <button class="x-btn x-btn--ghost" type="button" id="au-google">Continue with Google</button>
+          <button class="x-linkbtn" type="button" id="au-forgot">Forgot password?</button>
+          <p class="x-meta" id="au-msg"></p>
+          <p class="x-help">Sign up karke aap <a href="legal.html#terms" target="_blank">Terms</a> aur <a href="legal.html#privacy" target="_blank">Privacy Policy</a> se agree karte hain.</p>
+        </form>
+      </div>
+    </div>
+    <div class="x-modal" id="x-pricing" hidden>
+      <div class="x-card x-modalbox x-pricebox" role="dialog" aria-modal="true" aria-labelledby="pr-title">
+        <div class="x-sechead"><h2 id="pr-title">Choose your plan</h2><button class="x-btn x-btn--ghost x-mini" type="button" data-close>Close</button></div>
+        <div id="pr-step1"><div class="x-plans" id="pr-plans"></div></div>
+        <div id="pr-step2" hidden>
+          <button class="x-linkbtn" type="button" id="pr-back">← All plans</button>
+          <div class="x-paygrid">
+            <div>
+              <p class="x-eyebrow" id="pr-plan"></p>
+              <h3 id="pr-amount"></h3>
+              <div class="x-tabs" id="pr-methods"></div>
+              <div id="pr-method"></div>
+            </div>
+            <form id="pr-form" class="x-authform">
+              <ol class="x-steps"><li>Upar diye QR ya account par exact amount bhejein.</li><li>Transaction ID (TID) yahan likhein, screenshot lagayein.</li><li id="pr-step3txt">Admin approve karte hi plan active.</li></ol>
+              <label class="x-fgroup"><span class="x-flabel">Transaction ID (TID)</span><input class="x-input" id="pr-tid" type="text" required minlength="6" /></label>
+              <label class="x-fgroup"><span class="x-flabel">Payment screenshot</span><input class="x-input" id="pr-shot" type="file" accept="image/*" /></label>
+              <button class="x-btn" type="submit">I have paid · Submit</button>
+              <p class="x-meta" id="pr-msg"></p>
+              <a class="x-btn x-btn--ghost" id="pr-wa" target="_blank" rel="noopener">WhatsApp support</a>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="x-botfab" id="x-botfab" type="button" aria-label="Open research chat">💬 Ask TubeRadar</button>
+    <aside class="x-card x-chat" id="x-bot" hidden aria-label="Research chat">
+      <div class="x-sechead"><h2 id="bot-title">Research chat</h2><div class="x-liverow" style="margin:0;gap:6px"><button class="x-btn x-btn--ghost x-mini" id="bot-new" type="button">New</button><button class="x-btn x-btn--ghost x-mini" id="bot-close" type="button">Close</button></div></div>
+      <p class="x-meta" id="bot-ctx"></p>
+      <div class="x-chatlog" id="bot-log"></div>
+      <div class="x-chips" id="bot-sugg"></div>
+      <form class="x-liverow" id="bot-form"><input class="x-input" id="bot-in" type="text" placeholder="Ask anything about your niche…" aria-label="Ask a question" autocomplete="off" /><button class="x-btn" type="submit">Send</button></form>
+      <p class="x-note">Har jawab ~3 credits. @handle likhein to YouTube se us channel ki latest videos bhi dekhta hai.</p>
+    </aside>
     <div class="x-toast" id="x-toast" role="status" aria-live="polite"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="assets/config.js"></script>
+    <script src="assets/backend.js"></script>
     <script src="assets/hark.js"></script>
     <script src="app.js"></script>
+    <script src="pro.js"></script>
   </body>
 </html>
