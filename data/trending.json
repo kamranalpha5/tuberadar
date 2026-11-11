@@ -1,0 +1,237 @@
+{
+  "demo": true,
+  "generatedAt": "2026-11-11T07:32:58Z",
+  "windowHours": 48,
+  "newChannelMaxAgeDays": 180,
+  "keywords": [
+    "ai tools",
+    "true crime",
+    "stoicism",
+    "history documentary",
+    "personal finance",
+    "horror stories",
+    "minecraft",
+    "space documentary"
+  ],
+  "history": [
+    {
+      "breakout": 18,
+      "newChannels": 6,
+      "topVph": 21000,
+      "niches": 12
+    },
+    {
+      "breakout": 22,
+      "newChannels": 8,
+      "topVph": 26000,
+      "niches": 12
+    },
+    {
+      "breakout": 19,
+      "newChannels": 7,
+      "topVph": 24000,
+      "niches": 14
+    },
+    {
+      "breakout": 25,
+      "newChannels": 9,
+      "topVph": 31000,
+      "niches": 14
+    },
+    {
+      "breakout": 24,
+      "newChannels": 11,
+      "topVph": 29000,
+      "niches": 15
+    },
+    {
+      "breakout": 29,
+      "newChannels": 10,
+      "topVph": 38000,
+      "niches": 16
+    },
+    {
+      "breakout": 31,
+      "newChannels": 12,
+      "topVph": 44000,
+      "niches": 16
+    },
+    {
+      "breakout": 37,
+      "newChannels": 14,
+      "topVph": 48000,
+      "niches": 18
+    }
+  ],
+  "videos": [
+    {
+      "id": "demo0",
+      "title": "The Case Police Closed Too Early",
+      "thumbnail": null,
+      "publishedAt": "2026-11-10T14:32:58Z",
+      "niche": "true crime",
+      "views": 612000,
+      "viewsPerHour": 31500,
+      "durationSec": 720,
+      "isShort": false,
+      "outlier": 214,
+      "channel": {
+        "id": "UCdemo000000000000000000",
+        "title": "Buried Truths",
+        "thumbnail": null,
+        "subscribers": 8400,
+        "hiddenSubs": false,
+        "ageDays": 41,
+        "medianViews": 2860
+      }
+    },
+    {
+      "id": "demo1",
+      "title": "7 Free AI Tools That Feel Illegal",
+      "thumbnail": null,
+      "publishedAt": "2026-11-10T13:32:58Z",
+      "niche": "ai tools",
+      "views": 940000,
+      "viewsPerHour": 48200,
+      "durationSec": 720,
+      "isShort": false,
+      "outlier": 23,
+      "channel": {
+        "id": "UCdemo000000000000000000",
+        "title": "AI Toolbox Daily",
+        "thumbnail": null,
+        "subscribers": 51000,
+        "hiddenSubs": false,
+        "ageDays": 511,
+        "medianViews": 40870
+      }
+    },
+    {
+      "id": "demo2",
+      "title": "Marcus Aurelius' 3 Rules for Silence",
+      "thumbnail": null,
+      "publishedAt": "2026-11-10T13:32:58Z",
+      "niche": "stoicism",
+      "views": 288000,
+      "viewsPerHour": 14100,
+      "durationSec": 720,
+      "isShort": false,
+      "outlier": 58,
+      "channel": {
+        "id": "UCdemo000000000000000000",
+        "title": "Stoic Mornings",
+        "thumbnail": null,
+        "subscribers": 22000,
+        "hiddenSubs": false,
+        "ageDays": 97,
+        "medianViews": 4966
+      }
+    },
+    {
+      "id": "demo3",
+      "title": "The $50 Rule Rich People Follow",
+      "thumbnail": null,
+      "publishedAt": "2026-11-10T11:32:58Z",
+      "niche": "personal finance",
+      "views": 410000,
+      "viewsPerHour": 18600,
+      "durationSec": 720,
+      "isShort": false,
+      "outlier": 12,
+      "channel": {
+        "id": "UCdemo000000000000000000",
+        "title": "Cash Quietly",
+        "thumbnail": null,
+        "subscribers": 67000,
+        "hiddenSubs": false,
+        "ageDays": 766,
+        "medianViews": 34167
+      }
+    },
+    {
+      "id": "demo4",
+      "title": "Why Carthage Was Erased From Maps",
+      "thumbnail": null,
+      "publishedAt": "2026-11-10T15:32:58Z",
+      "niche": "history documentary",
+      "views": 175000,
+      "viewsPerHour": 9800,
+      "durationSec": 720,
+      "isShort": false,
+      "outlier": 140,
+      "channel": {
+        "id": "UCdemo000000000000000000",
+        "title": "Lost Empires",
+        "thumbnail": null,
+        "subscribers": 3100,
+        "hiddenSubs": false,
+        "ageDays": 22,
+        "medianViews": 1250
+      }
+    },
+    {
+      "id": "demo5",
+      "title": "I Built a Working Computer in Survival Minecraft",
+      "thumbnail": null,
+      "publishedAt": "2026-11-10T13:32:58Z",
+      "niche": "minecraft",
+      "views": 226000,
+      "viewsPerHour": 11300,
+      "durationSec": 720,
+      "isShort": false,
+      "outlier": 19,
+      "channel": {
+        "id": "UCdemo000000000000000000",
+        "title": "Pixel Forge",
+        "thumbnail": null,
+        "subscribers": 38000,
+        "hiddenSubs": false,
+        "ageDays": 402,
+        "medianViews": 11895
+      }
+    },
+    {
+      "id": "demo6",
+      "title": "What Voyager 1 Just Sent Back",
+      "thumbnail": null,
+      "publishedAt": "2026-11-10T17:32:58Z",
+      "niche": "space documentary",
+      "views": 198000,
+      "viewsPerHour": 12400,
+      "durationSec": 720,
+      "isShort": false,
+      "outlier": 27,
+      "channel": {
+        "id": "UCdemo000000000000000000",
+        "title": "Orbit Explained",
+        "thumbnail": null,
+        "subscribers": 29000,
+        "hiddenSubs": false,
+        "ageDays": 233,
+        "medianViews": 7333
+      }
+    },
+    {
+      "id": "demo7",
+      "title": "I Worked the Night Desk at an Empty Hotel",
+      "thumbnail": null,
+      "publishedAt": "2026-11-10T15:32:58Z",
+      "niche": "horror stories",
+      "views": 133000,
+      "viewsPerHour": 7200,
+      "durationSec": 720,
+      "isShort": false,
+      "outlier": 31,
+      "channel": {
+        "id": "UCdemo000000000000000000",
+        "title": "Nightshift Tales",
+        "thumbnail": null,
+        "subscribers": 14000,
+        "hiddenSubs": false,
+        "ageDays": 63,
+        "medianViews": 4290
+      }
+    }
+  ],
+  "breakoutChannels": []
+}
